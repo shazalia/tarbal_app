@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -208,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen>{
               icon: new Icon(Icons.person),
               color: Colors.white,
               onPressed: (){
+
                 _wedd();
               },
             ),
@@ -549,7 +551,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                         height: 50.0,
                                         onPressed: () {
                                           _deleteUser().whenComplete((){
-                                            _onToLog();
+                                            _onToSign();
                                           });
                                         },
 
@@ -649,6 +651,8 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
+                                      _onToSign();
+
                                       if(isCount == 1){
                                         showDialog(
                                             context: context, child: new MyForm(onSubmit: onSubmit,units: _units,id: id));
@@ -831,12 +835,14 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  _onToLog() {
+  _onToSign() {
     Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
+        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
   }
 
 }
+
+
 
 
 
@@ -900,6 +906,10 @@ class _MyFormState extends State<MyForm> {
     }
     );
   }
+  _onToSign() {
+    Navigator.pushReplacement(context,
+        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -908,10 +918,12 @@ class _MyFormState extends State<MyForm> {
       children: <Widget>[
         new Column(
           crossAxisAlignment: CrossAxisAlignment.end,
+
           children: <Widget>[
 
 
             new Padding(
+
               padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
               child: TextFormField(
                 controller: _name,
@@ -936,32 +948,10 @@ class _MyFormState extends State<MyForm> {
               ),
             ),
 
-            /*new Padding(
-              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
-              child: TextFormField(
-                controller: _region,
-                keyboardType: TextInputType.text,
-                autofocus: false,
-                decoration: InputDecoration(
-                  hintText: 'Address filter',
-                  contentPadding:
-                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(32.0)),
-                ),
-                validator: (value) {
-                  final RegExp regex = new RegExp(
-                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                },
-              ),
-            ),*/
 
             Container(
-              height: 1.0,
+               height: 1.0,
               color: Colors.grey,
               margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
             ),
@@ -1012,6 +1002,7 @@ class _MyFormState extends State<MyForm> {
         ),
       ],
     );
+
   }
 }
 

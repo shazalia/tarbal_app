@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tarbalcom/pages/signup.dart';
 import 'dart:async';
-import 'signup.dart';
+//import 'signup.dart';
 import 'home.dart';
 import 'package:http/http.dart' as http;
 import 'package:tarbalcom/utils/user.dart';
