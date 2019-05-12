@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setStringList('user', user);
   }
 
+  // ignore: missing_return
   Future<User> submitForm(String phone,String pass) async {
     final response = await http.post(
       "http://turbalkom.falsudan.com/api/login",
