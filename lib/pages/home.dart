@@ -922,31 +922,31 @@ class _MyFormState extends State<MyForm> {
           children: <Widget>[
 
 
-            new Padding(
-
-              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
-              child: TextFormField(
-                controller: _name,
-                keyboardType: TextInputType.number,
-                autofocus: false,
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: 'العدد',
-                  contentPadding:
-                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(32.0)),
-                ),
-                validator: (value) {
-                  final RegExp regex = new RegExp(
-                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                },
-              ),
-            ),
+//            new Padding(
+//
+//              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
+//              child: TextFormField(
+//                controller: _name,
+//                keyboardType: TextInputType.number,
+//                autofocus: false,
+//                textAlign: TextAlign.right,
+//                decoration: InputDecoration(
+//                  hintText: 'العدد',
+//                  contentPadding:
+//                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+//                  border: OutlineInputBorder(
+//                      borderRadius: BorderRadius.circular(32.0)),
+//                ),
+//                validator: (value) {
+//                  final RegExp regex = new RegExp(
+//                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+//
+//                  if (value.isEmpty) {
+//                    return 'Please enter some text';
+//                  }
+//                },
+//              ),
+//            ),
 
 
 
@@ -954,6 +954,49 @@ class _MyFormState extends State<MyForm> {
                height: 1.0,
               color: Colors.grey,
               margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("مساحة المزرعة بالفدان"),
+              onChanged: changedDropDownItemSub,
+
+
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("اعداد ثروات المزرعة"),
+              onChanged: changedDropDownItemSub,
+
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("طريقة الري"),
+              onChanged: changedDropDownItemSub,
+
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("مصدر الري"),
+              onChanged: changedDropDownItemSub,
+
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("مصدر الطاقة"),
+              onChanged: changedDropDownItemSub,
+
+            ),
+            new DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              hint: Text("طريقة العمل"),
+              onChanged: changedDropDownItemSub,
+
             ),
             DropdownButton(
               value: _currentCatSub,

@@ -17,6 +17,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
 
   String _mySelection;
 
+
   final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
 
   List data = List(); //edited line
@@ -24,6 +25,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
   Future<String> getSWData() async {
     var res = await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+
     var resBody = json.decode(res.body);
 
     setState(() {
