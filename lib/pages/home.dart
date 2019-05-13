@@ -228,41 +228,7 @@ class _HomeScreenState extends State<HomeScreen>{
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 20,),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
 
-                        Padding(
-                            padding: EdgeInsets.only(left: 25.0),
-                            child: DropdownButton(
-                              hint: Text("- غير محدد -"),
-                              value: _filter,
-                              items: _dropCatsSub,
-                              onChanged: (value){
-                                setState(() {
-                                  FocusScope.of(context).requestFocus(new FocusNode());
-                                  _filter = value;
-                                  _items = widget.items;
-                                  if(!value.toString().contains("الكل")){
-                                    _items = _items.where((i) =>  i["service_category_name"].toString().contains(value)).toList();
-                                  }
-                                }
-                                );
-                              },
-                            )
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only( left: 10.0),
-                          child: Text(
-                            " : بحث حسب  ",
-                            style: TextStyle(fontSize: 18.0, color: Colors.grey),
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ),
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
@@ -272,7 +238,6 @@ class _HomeScreenState extends State<HomeScreen>{
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
                         itemBuilder: (BuildContext context, int index) {
-
                           return new GestureDetector(
                             onTap: (){
                               scaffoldKey.currentState.showSnackBar(
@@ -280,13 +245,11 @@ class _HomeScreenState extends State<HomeScreen>{
                                 new Row(
                                   children: <Widget>[
                                     new CircularProgressIndicator(),
-                                    new Text("   جاري جلب التفاصيل ...     ")
+                                    new Text("   جاري جلب التفاصيل ...    ")
                                   ],
                                 ),
                                 ),
                               );
-
-
                               getDetails(_items[index]["id"].toString()).whenComplete(() {
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
@@ -318,28 +281,6 @@ class _HomeScreenState extends State<HomeScreen>{
                                           child: Column(
                                             children: <Widget>[
                                               SizedBox(height: 10,),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    Column(
-
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          _items[index]["name"],
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                                        ),
-
-                                                      ],
-                                                    ),
-
-                                                  ],
-                                                ),
-                                              ),
 
                                               Expanded(
                                                 flex: 1,
@@ -348,28 +289,8 @@ class _HomeScreenState extends State<HomeScreen>{
                                                   children: <Widget>[
                                                     Text(
                                                       _items[index]["service_category_name"],
-                                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
                                                     ),
-
-                                                  ],
-                                                ),
-                                              ),
-
-                                              Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: <Widget>[
-
-                                                    Text(
-                                                      _items[index]["address"],
-                                                      style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                                                    ),
-
-                                                    SizedBox(width: 10,),
-
-                                                    Icon(Icons.location_on,color: Color(0xFF1F6E46),),
-
                                                   ],
                                                 ),
                                               ),
@@ -651,7 +572,6 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
-                                      _onToSign();
 
                                       if(isCount == 1){
                                         showDialog(
