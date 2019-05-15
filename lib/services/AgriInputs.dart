@@ -56,17 +56,7 @@ class _AgriInputsState extends State<AgriInputs> {
               child: new ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 children: <Widget>[
-//                   new Checkbox(
-//                     value: boolValue,
-//                     onChanged: (bool value) {
-//                       setState(() {
-//                         Switch(title){
-//                           case
-//                         }
-//                       });
-//                     }
-//
-//                  ),
+
 
 
 

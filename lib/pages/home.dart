@@ -288,6 +288,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                                   mainAxisAlignment: MainAxisAlignment.end,
                                                   children: <Widget>[
                                                     Text(
+//                                                      _items[index]["service_category_name"],
                                                       _items[index]["service_category_name"],
                                                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
                                                     ),
