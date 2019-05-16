@@ -20,12 +20,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>{
 
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final scaffoldKey  = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
+  String _mySelection;
 
   String _filter;
   int check = 0,isCount = 0;
   List _filterList;
   int postStatus;
+  List data = List(); //edited line
   List<String> userList;
   List<DropdownMenuItem<String>> _dropCatsSub;
 
@@ -53,7 +57,9 @@ class _HomeScreenState extends State<HomeScreen>{
 
   @override
   void initState() {
+
     super.initState();
+    this.getServicePro();
 
     _getUser();
     _filterList = widget.cats;
@@ -163,6 +169,23 @@ class _HomeScreenState extends State<HomeScreen>{
 
     }
   }
+  // ignore: missing_return
+
+
+  Future<String> getServicePro() async {
+    var res = await http
+        .get(Uri.encodeFull("http://turbalkom.falsudan.com/api/forms/service_providers")
+        , headers: {"Accept": "application/json"});
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+
+    print(resBody);
+
+    return "success";
+  }
 
   List<DropdownMenuItem<String>> getDropCatsSub(List _cats) {
     List<DropdownMenuItem<String>> items = new List();
@@ -224,11 +247,9 @@ class _HomeScreenState extends State<HomeScreen>{
         body: Container(
             color: Color(0x111F6E46),
             child: Center(
-
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 20,),
-
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
@@ -250,13 +271,19 @@ class _HomeScreenState extends State<HomeScreen>{
                                 ),
                                 ),
                               );
-                              getDetails(_items[index]["id"].toString()).whenComplete(() {
-                                setState(() {
-                                  scaffoldKey.currentState.hideCurrentSnackBar();
-                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
-                                });
+                              if(_items[index]["id"].toString()==1){
+                                String id;
+                                showDialog(
+                                    context: context, child: new MyForm(onSubmit: onSubmit,units: _units,id: id));
 
-                              });
+                                 getDetails(_items[index]["id"].toString()).whenComplete(() {
+                                  setState(() {
+                                    scaffoldKey.currentState.hideCurrentSnackBar();
+                                    _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  });
+
+                                }
+                                );}
 
                             },
                             child: Container(
@@ -289,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                                   children: <Widget>[
                                                     Text(
 //                                                      _items[index]["service_category_name"],
-                                                      _items[index]["service_category_name"],
+                                                      _items[index]["name"],
                                                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
                                                     ),
                                                   ],
@@ -843,36 +870,8 @@ class _MyFormState extends State<MyForm> {
           children: <Widget>[
 
 
-//            new Padding(
-//
-//              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
-//              child: TextFormField(
-//                controller: _name,
-//                keyboardType: TextInputType.number,
-//                autofocus: false,
-//                textAlign: TextAlign.right,
-//                decoration: InputDecoration(
-//                  hintText: 'العدد',
-//                  contentPadding:
-//                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-//                  border: OutlineInputBorder(
-//                      borderRadius: BorderRadius.circular(32.0)),
-//                ),
-//                validator: (value) {
-//                  final RegExp regex = new RegExp(
-//                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-//
-//                  if (value.isEmpty) {
-//                    return 'Please enter some text';
-//                  }
-//                },
-//              ),
-//            ),
-
-
-
             Container(
-               height: 1.0,
+              height: 1.0,
               color: Colors.grey,
               margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
             ),
