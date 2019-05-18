@@ -1,13 +1,13 @@
 
 class Services {
-  final int servicesId;
   final String servicesName;
+  final String imageUrl;
 
-  Services({this.servicesId, this.servicesName});
+  Services({ this.servicesName,this.imageUrl});
   factory Services.fromJson(Map<String ,dynamic>json){
     return Services(
-      servicesId:json['id'],
-      servicesName:json['name'],
+       servicesName:json['name'],
+      imageUrl:json['image'],
 
     );
   }

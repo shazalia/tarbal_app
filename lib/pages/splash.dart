@@ -41,9 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
 
+  // ignore: missing_return
   Future<String> getItems() async {
     var response = await http.get(
-      Uri.encodeFull("http://turbalkom.falsudan.com/api/service_categories"),
+      Uri.encodeFull("http://www.amock.io/api/shazawdidi/service_categories"),
     );
 
 
@@ -182,8 +183,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _onSplashEnd() {
     Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => HomeScreen(items : _items,cats : _cats)));
-  }
+        new MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+   }
 
   _onNoUser() {
     Navigator.pushReplacement(context,
