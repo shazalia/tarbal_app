@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import 'package:tarbalcom/utils/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,27 +18,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>{
 
-  final scaffoldKey  = new GlobalKey<ScaffoldState>();
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  String _mySelection;
-
-  String _filter;
-  int check = 0,isCount = 0;
   List _filterList;
   int postStatus;
-  List data = List(); //edited line
   List<String> userList;
   List<DropdownMenuItem<String>> _dropCatsSub;
 
 
-  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
+  List _items = new List(0),_dets= new List(0),_name= new List(0);
   var map;
 
-  void onSubmit(int unit, int count,String service) {
+  void onSubmit(String name, int count,String service) {
 
     _loading();
-    placeOrderDetailed(userList[0],service,count,unit).whenComplete(() {
+    placeOrderDetailed(userList[0],service,count,name).whenComplete(() {
       if (postStatus == 200) {
         Navigator.pop(context);
         _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
@@ -51,33 +43,25 @@ class _HomeScreenState extends State<HomeScreen>{
       }
     });
 
-    //print("type: "+result.toString()+"ben: "+ben.toString()+"desiel: "+des.toString());
-
   }
 
   @override
   void initState() {
-
     super.initState();
-    this.getServicePro();
 
     _getUser();
-    _filterList = widget.cats;
 
     if(widget.cats == null){
       _filterList = new List(0);
     }else{
       _filterList = widget.cats;
-
     }
-
     if(widget.items == null){
       _items = new List(0);
     }else{
       _items = widget.items;
       print(_items.toString());
     }
-    //_filter = _filterList[0]["name"];
     _dropCatsSub = getDropCatsSub(_filterList);
 
 
@@ -96,29 +80,18 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 
   Future<String> getDetails(String id) async {
-    final response = await http.post(
+    final response = await http.get(
       "http://turbalkom.falsudan.com/api/service_details",
       headers: {
         "Accept": "application/json"
       },
-      body: {
-        'service_id': id
-        //image': image,
-      },
+
     );
     setState(() {
       _dets= json.decode(response.body)["data"]["details"];
       if(json.decode(response.body)["data"]["quantity_units"].toString().length >0){
 
-        setState(() {
-          isCount = 1;
-          map= json.decode(response.body)["data"]["quantity_units"];
-          _units = List.from(map.values).toList();
 
-          if(_units.length >0){
-            isCount = 1;
-          }
-        });
 
       }
 
@@ -127,19 +100,38 @@ class _HomeScreenState extends State<HomeScreen>{
     //List responseJson = json.decode(response.body)["data"];
     return "done";
   }
+  Future<String> getSWData() async {
+    final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
+    List data = List(); //edited line
 
-  Future placeOrderDetailed(String phone,String pass,int count,int unit) async {
-    final response = await http.post(
-      "http://turbalkom.falsudan.com/api/add_order",
+
+    var res = await http
+        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+
+    print(resBody);
+
+    return "success";
+  }
+
+  Future placeOrderDetailed(String phone,String pass,int count,String name) async {
+    final response = await http.get(
+      "http://turbalkom.falsudan.com/api/forms/service_providers",
       headers: {
         "Accept": "application/json"
       },
-      body: {
-        'client_id': phone,
-        'service_id': pass,
-        'quantity': count.toString(),
-        'unit_id': unit.toString()
-      },
+
+//      body: {
+//        'client_id': phone,
+//        'service_id': pass,
+//        'quantity': count.toString(),
+//        'unit_id': unit.toString()
+//      },
     );
 
     if (response.body.toString().contains("success")) {
@@ -168,23 +160,6 @@ class _HomeScreenState extends State<HomeScreen>{
       });
 
     }
-  }
-  // ignore: missing_return
-
-
-  Future<String> getServicePro() async {
-    var res = await http
-        .get(Uri.encodeFull("http://turbalkom.falsudan.com/api/forms/service_providers")
-        , headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
-
-    setState(() {
-      data = resBody;
-    });
-
-    print(resBody);
-
-    return "success";
   }
 
   List<DropdownMenuItem<String>> getDropCatsSub(List _cats) {
@@ -232,7 +207,6 @@ class _HomeScreenState extends State<HomeScreen>{
               icon: new Icon(Icons.person),
               color: Colors.white,
               onPressed: (){
-
                 _wedd();
               },
             ),
@@ -247,9 +221,11 @@ class _HomeScreenState extends State<HomeScreen>{
         body: Container(
             color: Color(0x111F6E46),
             child: Center(
+
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 20,),
+
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
@@ -259,6 +235,7 @@ class _HomeScreenState extends State<HomeScreen>{
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
                         itemBuilder: (BuildContext context, int index) {
+
                           return new GestureDetector(
                             onTap: (){
                               scaffoldKey.currentState.showSnackBar(
@@ -266,24 +243,20 @@ class _HomeScreenState extends State<HomeScreen>{
                                 new Row(
                                   children: <Widget>[
                                     new CircularProgressIndicator(),
-                                    new Text("   جاري جلب التفاصيل ...    ")
+                                    new Text("   جاري جلب التفاصيل ...     ")
                                   ],
                                 ),
                                 ),
                               );
-                              if(_items[index]["id"].toString()==1){
-                                String id;
-                                showDialog(
-                                    context: context, child: new MyForm(onSubmit: onSubmit,units: _units,id: id));
 
-                                 getDetails(_items[index]["id"].toString()).whenComplete(() {
-                                  setState(() {
-                                    scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
-                                  });
 
-                                }
-                                );}
+                              getDetails(_items[index]["id"].toString()).whenComplete(() {
+                                setState(() {
+                                  scaffoldKey.currentState.hideCurrentSnackBar();
+                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                });
+
+                              });
 
                             },
                             child: Container(
@@ -308,20 +281,29 @@ class _HomeScreenState extends State<HomeScreen>{
                                           child: Column(
                                             children: <Widget>[
                                               SizedBox(height: 10,),
-
                                               Expanded(
                                                 flex: 1,
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.end,
                                                   children: <Widget>[
-                                                    Text(
-//                                                      _items[index]["service_category_name"],
-                                                      _items[index]["name"],
-                                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                                    Column(
+
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          _items[index]["name"],
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                                        ),
+
+                                                      ],
                                                     ),
+
                                                   ],
                                                 ),
                                               ),
+
 
                                               SizedBox(height: 10,)
 
@@ -500,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                         height: 50.0,
                                         onPressed: () {
                                           _deleteUser().whenComplete((){
-                                            _onToSign();
+                                            _onToLog();
                                           });
                                         },
 
@@ -601,10 +583,9 @@ class _HomeScreenState extends State<HomeScreen>{
                                     minWidth: 20,
                                     onPressed: () {
 
-                                      if(isCount == 1){
-                                        showDialog(
-                                            context: context, child: new MyForm(onSubmit: onSubmit,units: _units,id: id));
-                                      }else{
+
+
+
                                         _loading();
                                         placeOrder(userList[0],id).whenComplete(() {
                                           if (postStatus == 200) {
@@ -616,7 +597,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                             _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
                                           }
                                         });
-                                      }
+
 
                                     },
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
@@ -783,9 +764,9 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 
-  _onToSign() {
+  _onToLog() {
     Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+        new MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
   }
 
 }
@@ -793,17 +774,14 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
+typedef void MyFormCallback(int name,String id);
 
-
-typedef void MyFormCallback(int unit,int count,String id);
-
-// ignore: must_be_immutable
 class MyForm extends StatefulWidget {
   final MyFormCallback onSubmit;
-  List units;
+  List name;
   String id;
 
-  MyForm({this.onSubmit,this.units,this.id});
+  MyForm({this.onSubmit,this.name,this.id});
 
   @override
   _MyFormState createState() => new _MyFormState();
@@ -821,7 +799,7 @@ class _MyFormState extends State<MyForm> {
   static final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
-    _values = widget.units;
+//    _values = widget.id;
     _id = widget.id;
     _dropCatsSub = getDropCatsSub();
     _currentCatSub = _values[0];
@@ -854,10 +832,6 @@ class _MyFormState extends State<MyForm> {
     }
     );
   }
-  _onToSign() {
-    Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -866,64 +840,63 @@ class _MyFormState extends State<MyForm> {
       children: <Widget>[
         new Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-
           children: <Widget>[
 
+    Container(
+    height: 1.0,
+    color: Colors.grey,
+    margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("مساحة المزرعة بالفدان"),
+    onChanged: changedDropDownItemSub,
 
-            Container(
-              height: 1.0,
-              color: Colors.grey,
-              margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("مساحة المزرعة بالفدان"),
-              onChanged: changedDropDownItemSub,
 
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("اعداد ثروات المزرعة"),
+    onChanged: changedDropDownItemSub,
 
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("اعداد ثروات المزرعة"),
-              onChanged: changedDropDownItemSub,
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("طريقة الري"),
+    onChanged: changedDropDownItemSub,
 
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("طريقة الري"),
-              onChanged: changedDropDownItemSub,
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("مصدر الري"),
+    onChanged: changedDropDownItemSub,
 
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("مصدر الري"),
-              onChanged: changedDropDownItemSub,
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("مصدر الطاقة"),
+    onChanged: changedDropDownItemSub,
 
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("مصدر الطاقة"),
-              onChanged: changedDropDownItemSub,
+    ),
+    new DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    hint: Text("طريقة العمل"),
+    onChanged: changedDropDownItemSub,
 
-            ),
-            new DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              hint: Text("طريقة العمل"),
-              onChanged: changedDropDownItemSub,
+    ),
+    DropdownButton(
+    value: _currentCatSub,
+    items: _dropCatsSub,
+    onChanged: changedDropDownItemSub,
+    )
 
-            ),
-            DropdownButton(
-              value: _currentCatSub,
-              items: _dropCatsSub,
-              onChanged: changedDropDownItemSub,
-            )
-          ],
+    ],
         ),
 
 
@@ -957,7 +930,7 @@ class _MyFormState extends State<MyForm> {
 
                 onPressed: () {
                   Navigator.pop(context);
-                  widget.onSubmit(unit_id,int.tryParse(_name.text),_id);
+                  widget.onSubmit(int.tryParse(_name.text),_id);
                 },
               ),
             ),
@@ -965,7 +938,6 @@ class _MyFormState extends State<MyForm> {
         ),
       ],
     );
-
   }
 }
 
