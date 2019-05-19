@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen>{
     //List responseJson = json.decode(response.body)["data"];
     return "done";
   }
-  Future<String> getSWData() async {
+  Future<String> getSWData(String id) async {
     final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
     List data = List(); //edited line
 
@@ -257,6 +257,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                 });
 
                               });
+
 
                             },
                             child: Container(
@@ -518,9 +519,30 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   void _modalBottomSheetMenu(List _details,String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    void changedDropDownItemSub(String selectedCat) {
+      setState(() {
+        _currentCatSub = selectedCat;
+        for(int x=1;x<_values.length;x++){
+          if(_values[x] == selectedCat){
+            unit_id = x;
+          }
+        }
+      }
+      );
+    }
+
+
+
     scaffoldKey.currentState.showBottomSheet((context){
       return new Container(
         //color: Color(0xFFEEEEEE),
@@ -686,6 +708,54 @@ class _HomeScreenState extends State<HomeScreen>{
 
                               ),
                             ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("مساحة المزرعة بالفدان"),
+                              onChanged: changedDropDownItemSub,
+
+
+                            ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("اعداد ثروات المزرعة"),
+                              onChanged: changedDropDownItemSub,
+
+                            ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("طريقة الري"),
+                              onChanged: changedDropDownItemSub,
+
+                            ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("مصدر الري"),
+                              onChanged: changedDropDownItemSub,
+
+                            ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("مصدر الطاقة"),
+                              onChanged: changedDropDownItemSub,
+
+                            ),
+                            new DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              hint: Text("طريقة العمل"),
+                              onChanged: changedDropDownItemSub,
+
+                            ),
+                            DropdownButton(
+                              value: _currentCatSub,
+                              items: _dropCatsSub,
+                              onChanged: changedDropDownItemSub,
+                            )
 
 
                           ],
