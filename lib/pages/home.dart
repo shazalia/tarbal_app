@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
     });
 
-    //List responseJson = json.decode(response.body)["data"];
+    //List getDropCatsSubresponseJson = json.decode(response.body)["data"];
     return "done";
   }
   Future<String> getSWData(String id) async {
