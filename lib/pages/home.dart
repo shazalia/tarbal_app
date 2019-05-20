@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,24 +18,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>{
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-
   List _filterList;
   int postStatus;
   List<String> userList;
   List<DropdownMenuItem<String>> _dropCatsSub;
-
-
   List _items = new List(0),_dets= new List(0),_name= new List(0);
   var map;
-
   void onSubmit(String name, int count,String service) {
-
     _loading();
     placeOrderDetailed(userList[0],service,count,name).whenComplete(() {
       if (postStatus == 200) {
         Navigator.pop(context);
         _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
       } else {
         Navigator.pop(context);
         _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
@@ -48,9 +41,7 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     super.initState();
-
     _getUser();
-
     if(widget.cats == null){
       _filterList = new List(0);
     }else{
@@ -63,8 +54,6 @@ class _HomeScreenState extends State<HomeScreen>{
       print(_items.toString());
     }
     _dropCatsSub = getDropCatsSub(_filterList);
-
-
   }
   _getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,13 +61,11 @@ class _HomeScreenState extends State<HomeScreen>{
       userList = prefs.getStringList("user");
     });
   }
-
   Future _deleteUser() async {
     List<String> user = new List(0);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user', user);
   }
-
   Future<String> getDetails(String id) async {
     final response = await http.get(
       "http://turbalkom.falsudan.com/api/service_details",
@@ -90,9 +77,6 @@ class _HomeScreenState extends State<HomeScreen>{
     setState(() {
       _dets= json.decode(response.body)["data"]["details"];
       if(json.decode(response.body)["data"]["quantity_units"].toString().length >0){
-
-
-
       }
 
     });

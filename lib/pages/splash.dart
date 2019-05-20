@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'dart:async';
 import 'home.dart';
 import 'package:http/http.dart' as http;
@@ -182,7 +183,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _onSplashEnd() {
     Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => HomeScreen(items : _items,cats : _cats)));
+        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
   }
 
   _onNoUser() {
