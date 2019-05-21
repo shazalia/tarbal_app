@@ -47,7 +47,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text("تربالكم",
+        title: Text("تربالكم-مزودي الخدمات ",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -102,7 +102,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                       return InputDecorator(
                         decoration: InputDecoration(
                           icon: const Icon(Icons.ac_unit),
-                          labelText: 'مساحة المزرعة المخصصة للانتاج الزراعي (بالفدان)',
+                          labelText: 'مساحة  المخصصة للانتاج الزراعي (بالفدان)',
                           errorText: state.hasError ? state.errorText : null,
                         ),
                         isEmpty: _color == '',

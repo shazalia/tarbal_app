@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tarbalcom/services/AgriInputs.dart';
+import 'package:tarbalcom/services/EstabFarms.dart';
 import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -234,13 +236,13 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
                               getDetails(_items[index]["id"].toString()).whenComplete(() {
-                                if(_items[index]["id"]==1){
+                                if(_items[index]["id"]==2){
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
                                   _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                 });
                                 }
-                                else if(_items[index]["id"]==2){
+                                else if(_items[index]["id"]==1){
                                   setState(() {
                                     scaffoldKey.currentState.hideCurrentSnackBar();
                                     _modalBottomSheetMenu2(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
@@ -578,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomRight: Radius.circular(8.0),
                       ),
                       child: Image.network(
-                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                          'https://www.israel21c.org/wp-content/uploads/2017/06/shutterstock_precisionag-1168x657.jpg',
                            width: 250,
                           height: 150,
                           fit:BoxFit.fill
@@ -739,17 +741,6 @@ class _HomeScreenState extends State<HomeScreen>{
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    void changedDropDownItemSub(String selectedCat) {
-      setState(() {
-        _currentCatSub = selectedCat;
-        for(int x=1;x<_values.length;x++){
-          if(_values[x] == selectedCat){
-            unit_id = x;
-          }
-        }
-      }
-      );
-    }
 
 
 
@@ -792,8 +783,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomRight: Radius.circular(8.0),
                       ),
                       child: Image.network(
-                          'https://www.israel21c.org/wp-content/uploads/2017/06/shutterstock_precisionag-1168x657.jpg',
-                          width: 250,
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
                           height: 150,
                           fit:BoxFit.fill
 
@@ -825,31 +816,34 @@ class _HomeScreenState extends State<HomeScreen>{
                                   color: Color(0xFF1F6E46),
                                   borderRadius: BorderRadius.circular(30.0),
                                   shadowColor: Colors.green,
+                                  elevation: 10.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                          new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
+
+                                    },
+                                    child: Text('مدخلات حيوانية', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
                                   elevation: 5.0,
                                   child: MaterialButton(
                                     //minWidth: 200.0,
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
-
-
-
-
-                                      _loading();
-                                      placeOrder(userList[0],id).whenComplete(() {
-                                        if (postStatus == 200) {
-                                          Navigator.pop(context);
-                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        } else {
-                                          Navigator.pop(context);
-                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        }
-                                      });
-
+                                      Navigator.pushReplacement(context,
+                                          new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
 
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text('مدخلات نباتية', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
@@ -967,17 +961,6 @@ class _HomeScreenState extends State<HomeScreen>{
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    void changedDropDownItemSub(String selectedCat) {
-      setState(() {
-        _currentCatSub = selectedCat;
-        for(int x=1;x<_values.length;x++){
-          if(_values[x] == selectedCat){
-            unit_id = x;
-          }
-        }
-      }
-      );
-    }
 
 
 
@@ -1020,8 +1003,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomRight: Radius.circular(8.0),
                       ),
                       child: Image.network(
-                          'https://wallpaperaccess.com/full/803484.jpg',
-                          width: 250,
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
                           height: 150,
                           fit:BoxFit.fill
 
@@ -1059,27 +1042,15 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
-
-
-
-
-                                      _loading();
-                                      placeOrder(userList[0],id).whenComplete(() {
-                                        if (postStatus == 200) {
-                                          Navigator.pop(context);
-                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        } else {
-                                          Navigator.pop(context);
-                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        }
-                                      });
-
+                                      Navigator.pushReplacement(context,
+                                          new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
 
                                     },
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
+
                                 ),
+
                               ],
                             )
                         ),
@@ -1184,7 +1155,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  void _modalBottomSheetMenu4(List _details,String name, String desc,String id){
+   void _modalBottomSheetMenu4(List _details,String name, String desc,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
