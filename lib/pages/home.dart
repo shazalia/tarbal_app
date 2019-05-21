@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -19,22 +20,27 @@ class _HomeScreenState extends State<HomeScreen>{
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   List _filterList;
+  int check = 0,isCount = 0;
   int postStatus;
   List<String> userList;
   List<DropdownMenuItem<String>> _dropCatsSub;
-  List _items = new List(0),_dets= new List(0),_name= new List(0);
+  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
   var map;
-  void onSubmit(String name, int count,String service) {
+  void onSubmit(int unit, int count,String service) {
+
     _loading();
-    placeOrderDetailed(userList[0],service,count,name).whenComplete(() {
+    placeOrderDetailed(userList[0],service,count,unit).whenComplete(() {
       if (postStatus == 200) {
         Navigator.pop(context);
         _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+
       } else {
         Navigator.pop(context);
         _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
       }
     });
+
+    //print("type: "+result.toString()+"ben: "+ben.toString()+"desiel: "+des.toString());
 
   }
 
@@ -68,20 +74,13 @@ class _HomeScreenState extends State<HomeScreen>{
   }
   Future<String> getDetails(String id) async {
     final response = await http.get(
-      "http://turbalkom.falsudan.com/api/service_details",
+      "http://turbalkom.falsudan.com/api/service_categories",
       headers: {
         "Accept": "application/json"
       },
 
     );
-    setState(() {
-      _dets= json.decode(response.body)["data"]["details"];
-      if(json.decode(response.body)["data"]["quantity_units"].toString().length >0){
-      }
 
-    });
-
-    //List getDropCatsSubresponseJson = json.decode(response.body)["data"];
     return "done";
   }
   Future<String> getSWData(String id) async {
@@ -102,20 +101,18 @@ class _HomeScreenState extends State<HomeScreen>{
 
     return "success";
   }
-
-  Future placeOrderDetailed(String phone,String pass,int count,String name) async {
-    final response = await http.get(
-      "http://turbalkom.falsudan.com/api/forms/service_providers",
+  Future placeOrderDetailed(String phone,String pass,int count,int unit) async {
+    final response = await http.post(
+      "http://turbalkom.falsudan.com/api/add_order",
       headers: {
         "Accept": "application/json"
       },
-
-//      body: {
-//        'client_id': phone,
-//        'service_id': pass,
-//        'quantity': count.toString(),
-//        'unit_id': unit.toString()
-//      },
+      body: {
+        'client_id': phone,
+        'service_id': pass,
+        'quantity': count.toString(),
+        'unit_id': unit.toString()
+      },
     );
 
     if (response.body.toString().contains("success")) {
@@ -210,12 +207,14 @@ class _HomeScreenState extends State<HomeScreen>{
                 children: <Widget>[
                   SizedBox(height: 20,),
 
+
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         physics: const ClampingScrollPhysics(),
                         itemCount: _items.length,
+
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
                         itemBuilder: (BuildContext context, int index) {
@@ -235,12 +234,36 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
                               getDetails(_items[index]["id"].toString()).whenComplete(() {
+                                if(_items[index]["id"]==1){
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
                                   _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                 });
+                                }
+                                else if(_items[index]["id"]==2){
+                                  setState(() {
+                                    scaffoldKey.currentState.hideCurrentSnackBar();
+                                    _modalBottomSheetMenu2(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  });
+
+                                }
+                                else if(_items[index]["id"]==3){
+                                  setState(() {
+                                    scaffoldKey.currentState.hideCurrentSnackBar();
+                                    _modalBottomSheetMenu3(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  });
+
+                                }
+                                else if(_items[index]["id"]==5){
+                                  setState(() {
+                                    scaffoldKey.currentState.hideCurrentSnackBar();
+                                    _modalBottomSheetMenu4(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  });
+
+                                }
 
                               });
+
 
 
                             },
@@ -513,6 +536,209 @@ class _HomeScreenState extends State<HomeScreen>{
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+
+
+    scaffoldKey.currentState.showBottomSheet((context){
+      return new Container(
+        //color: Color(0xFFEEEEEE),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+            ],
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+          ),
+        ),
+
+        child: new Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
+
+                  ],
+                )
+
+            ),
+            Container(
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+
+
+                        Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
+                                  elevation: 5.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                          new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+
+                                    },
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+
+                    ),
+                    SizedBox(height: 10,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
+
+                      ],
+
+                    ),
+                  ],
+                )
+            ),
+
+
+
+            Expanded(
+                child:ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: _details.length,
+                    // itemExtent: 10.0,
+                    //reverse: true, //makes the list appear in descending order
+                    itemBuilder: (BuildContext context, int index) {
+                      return new Container(
+                        child: Column(
+                          children: <Widget>[
+                            index !=0?Container(
+                              margin: EdgeInsets.only(left: 20,right: 20),
+                              height: 1,
+                              color: Color(0x331F6E46),
+                            ):Container(),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    _details[index]["value"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    "   :   ",
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    _details[index]["label"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
+                                  ),
+
+
+                                ],
+
+                              ),
+                            ),
+
+
+
+                          ],
+                        ),
+                      );
+                    }
+                )
+
+            ),
+
+          ],
+        ),
+
+      );
+
+
+    });
+
+
+  }
+  void _modalBottomSheetMenu2(List _details,String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
+
+    double screenheught = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     void changedDropDownItemSub(String selectedCat) {
       setState(() {
         _currentCatSub = selectedCat;
@@ -545,33 +771,50 @@ class _HomeScreenState extends State<HomeScreen>{
         child: new Column(
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 40.0, top: 10.0),
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
                 child: Row(
-
                   children: <Widget>[
                     IconButton(
                       icon: Icon(
                         Icons.close,
                         size: 20,
                         color: Colors.black54,
-
                       ),
                       onPressed: (){
                         Navigator.pop(context);
                       },
                     ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'https://www.israel21c.org/wp-content/uploads/2017/06/shutterstock_precisionag-1168x657.jpg',
+                          width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
 
                   ],
                 )
+
             ),
             Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
                 child: Column(
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+
+
                         Expanded(
                             flex: 2,
                             child: Row(
@@ -592,17 +835,17 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-                                        _loading();
-                                        placeOrder(userList[0],id).whenComplete(() {
-                                          if (postStatus == 200) {
-                                            Navigator.pop(context);
-                                            _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+                                      _loading();
+                                      placeOrder(userList[0],id).whenComplete(() {
+                                        if (postStatus == 200) {
+                                          Navigator.pop(context);
+                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
 
-                                          } else {
-                                            Navigator.pop(context);
-                                            _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                          }
-                                        });
+                                        } else {
+                                          Navigator.pop(context);
+                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+                                        }
+                                      });
 
 
                                     },
@@ -692,54 +935,463 @@ class _HomeScreenState extends State<HomeScreen>{
 
                               ),
                             ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("مساحة المزرعة بالفدان"),
-                              onChanged: changedDropDownItemSub,
 
 
-                            ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("اعداد ثروات المزرعة"),
-                              onChanged: changedDropDownItemSub,
 
-                            ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("طريقة الري"),
-                              onChanged: changedDropDownItemSub,
+                          ],
+                        ),
+                      );
+                    }
+                )
 
-                            ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("مصدر الري"),
-                              onChanged: changedDropDownItemSub,
+            ),
 
-                            ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("مصدر الطاقة"),
-                              onChanged: changedDropDownItemSub,
+          ],
+        ),
 
-                            ),
-                            new DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              hint: Text("طريقة العمل"),
-                              onChanged: changedDropDownItemSub,
+      );
 
-                            ),
-                            DropdownButton(
-                              value: _currentCatSub,
-                              items: _dropCatsSub,
-                              onChanged: changedDropDownItemSub,
+
+    });
+
+
+  }
+  void _modalBottomSheetMenu3(List _details,String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
+
+    double screenheught = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    void changedDropDownItemSub(String selectedCat) {
+      setState(() {
+        _currentCatSub = selectedCat;
+        for(int x=1;x<_values.length;x++){
+          if(_values[x] == selectedCat){
+            unit_id = x;
+          }
+        }
+      }
+      );
+    }
+
+
+
+    scaffoldKey.currentState.showBottomSheet((context){
+      return new Container(
+        //color: Color(0xFFEEEEEE),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+            ],
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+          ),
+        ),
+
+        child: new Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'https://wallpaperaccess.com/full/803484.jpg',
+                          width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
+
+                  ],
+                )
+
+            ),
+            Container(
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+
+
+                        Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
+                                  elevation: 5.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+
+
+
+
+                                      _loading();
+                                      placeOrder(userList[0],id).whenComplete(() {
+                                        if (postStatus == 200) {
+                                          Navigator.pop(context);
+                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+
+                                        } else {
+                                          Navigator.pop(context);
+                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+                                        }
+                                      });
+
+
+                                    },
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ],
                             )
+                        ),
+
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+
+                    ),
+                    SizedBox(height: 10,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
+
+                      ],
+
+                    ),
+                  ],
+                )
+            ),
+
+
+
+            Expanded(
+                child:ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: _details.length,
+                    // itemExtent: 10.0,
+                    //reverse: true, //makes the list appear in descending order
+                    itemBuilder: (BuildContext context, int index) {
+                      return new Container(
+                        child: Column(
+                          children: <Widget>[
+                            index !=0?Container(
+                              margin: EdgeInsets.only(left: 20,right: 20),
+                              height: 1,
+                              color: Color(0x331F6E46),
+                            ):Container(),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    _details[index]["value"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    "   :   ",
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    _details[index]["label"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
+                                  ),
+
+
+                                ],
+
+                              ),
+                            ),
+
+
+
+                          ],
+                        ),
+                      );
+                    }
+                )
+
+            ),
+
+          ],
+        ),
+
+      );
+
+
+    });
+
+
+  }
+  void _modalBottomSheetMenu4(List _details,String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
+
+    double screenheught = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    void changedDropDownItemSub(String selectedCat) {
+      setState(() {
+        _currentCatSub = selectedCat;
+        for(int x=1;x<_values.length;x++){
+          if(_values[x] == selectedCat){
+            unit_id = x;
+          }
+        }
+      }
+      );
+    }
+
+
+
+    scaffoldKey.currentState.showBottomSheet((context){
+      return new Container(
+        //color: Color(0xFFEEEEEE),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+            ],
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+          ),
+        ),
+
+        child: new Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'http://johnpauloshea.ie/wp-content/uploads/2016/02/Agriculture.jpg',
+                          width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
+
+                  ],
+                )
+
+            ),
+            Container(
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+
+
+                        Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
+                                  elevation: 5.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+
+
+
+
+                                      _loading();
+                                      placeOrder(userList[0],id).whenComplete(() {
+                                        if (postStatus == 200) {
+                                          Navigator.pop(context);
+                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+
+                                        } else {
+                                          Navigator.pop(context);
+                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+                                        }
+                                      });
+
+
+                                    },
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+
+                    ),
+                    SizedBox(height: 10,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
+
+                      ],
+
+                    ),
+                  ],
+                )
+            ),
+
+
+
+            Expanded(
+                child:ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: _details.length,
+                    // itemExtent: 10.0,
+                    //reverse: true, //makes the list appear in descending order
+                    itemBuilder: (BuildContext context, int index) {
+                      return new Container(
+                        child: Column(
+                          children: <Widget>[
+                            index !=0?Container(
+                              margin: EdgeInsets.only(left: 20,right: 20),
+                              height: 1,
+                              color: Color(0x331F6E46),
+                            ):Container(),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    _details[index]["value"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    "   :   ",
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
+
+                                  Text(
+                                    _details[index]["label"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
+                                  ),
+
+
+                                ],
+
+                              ),
+                            ),
+
 
 
                           ],
@@ -828,14 +1480,14 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-typedef void MyFormCallback(int name,String id);
+typedef void MyFormCallback(int unit,int count,String id);
 
+// ignore: must_be_immutable
 class MyForm extends StatefulWidget {
   final MyFormCallback onSubmit;
-  List name;
-  String id;
+   String id;
 
-  MyForm({this.onSubmit,this.name,this.id});
+  MyForm({this.onSubmit,this.id});
 
   @override
   _MyFormState createState() => new _MyFormState();
@@ -853,8 +1505,7 @@ class _MyFormState extends State<MyForm> {
   static final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
-//    _values = widget.id;
-    _id = widget.id;
+     _id = widget.id;
     _dropCatsSub = getDropCatsSub();
     _currentCatSub = _values[0];
   }
@@ -862,14 +1513,7 @@ class _MyFormState extends State<MyForm> {
 
   List<DropdownMenuItem<String>> getDropCatsSub() {
     List<DropdownMenuItem<String>> items = new List();
-    for (int i = 0;i<_values.length;i++) {
-      String a ;
-      a = _values[i];
-      items.add(new DropdownMenuItem(value: a, child:  new SizedBox(
-          width: 200.0,
-          child: new Text(a)
-      ),));
-    }
+
     return items;
   }
 
@@ -896,61 +1540,45 @@ class _MyFormState extends State<MyForm> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
 
-    Container(
-    height: 1.0,
-    color: Colors.grey,
-    margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("مساحة المزرعة بالفدان"),
-    onChanged: changedDropDownItemSub,
+
+            new Padding(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
+              child: TextFormField(
+                controller: _name,
+                keyboardType: TextInputType.number,
+                autofocus: false,
+                textAlign: TextAlign.right,
+                decoration: InputDecoration(
+                  hintText: 'العدد',
+                  contentPadding:
+                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                ),
+                validator: (value) {
+                  final RegExp regex = new RegExp(
+                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                },
+              ),
+            ),
 
 
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("اعداد ثروات المزرعة"),
-    onChanged: changedDropDownItemSub,
 
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("طريقة الري"),
-    onChanged: changedDropDownItemSub,
-
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("مصدر الري"),
-    onChanged: changedDropDownItemSub,
-
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("مصدر الطاقة"),
-    onChanged: changedDropDownItemSub,
-
-    ),
-    new DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    hint: Text("طريقة العمل"),
-    onChanged: changedDropDownItemSub,
-
-    ),
-    DropdownButton(
-    value: _currentCatSub,
-    items: _dropCatsSub,
-    onChanged: changedDropDownItemSub,
-    )
-
-    ],
+            Container(
+              height: 1.0,
+              color: Colors.grey,
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0,top: 20.0),
+            ),
+            DropdownButton(
+              value: _currentCatSub,
+              items: _dropCatsSub,
+              onChanged: changedDropDownItemSub,
+            )
+          ],
         ),
 
 
@@ -984,7 +1612,7 @@ class _MyFormState extends State<MyForm> {
 
                 onPressed: () {
                   Navigator.pop(context);
-                  widget.onSubmit(int.tryParse(_name.text),_id);
+                  widget.onSubmit(unit_id,int.tryParse(_name.text),_id);
                 },
               ),
             ),
@@ -996,6 +1624,9 @@ class _MyFormState extends State<MyForm> {
 }
 
 enum Answer { OK, CANCEL }
+
+
+
 
 
 

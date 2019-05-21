@@ -183,7 +183,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _onSplashEnd() {
     Navigator.pushReplacement(context,
-        new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+        new MaterialPageRoute(builder: (BuildContext context) => HomeScreen(items : _items,cats : _cats)));
   }
 
   _onNoUser() {
