@@ -1,24 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
  import 'package:tarbalcom/model/Category.dart';
 
 
 
 
 class ServiceProvScreen extends StatefulWidget {
-  ServiceProvScreen({Key key, this.title}) : super(key: key);
+  ServiceProvScreen({Key key, this.title, this.service}) : super(key: key);
   final String title;
+  final List service;
 
   @override
   _ServiceProvScreenState createState() => new _ServiceProvScreenState();
 }
 
 class _ServiceProvScreenState extends State<ServiceProvScreen> {
+  List _items = new List(0),_cats = new List(0),_dets= new List(0),_serv= new List(0);
+  var map;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  List<String> _provider = <String>['','راعي','مُزارع', 'خريج بيطرة/إنتاج حيواني', 'خبير بيطرة/إنتاج حيواني', 'خريج زراعة', 'خبير زراعة'];
-  List<String> _space = <String>['','راعي','مُزارع', 'خريج بيطرة/إنتاج حيواني', 'خبير بيطرة/إنتاج حيواني', 'خريج زراعة', 'خبير زراعة'];
+  int check = 0,isCount = 0;
+  int postStatus;
+  List<String> _provider;
+  List<String> userList;
   String _color = '';
   Category newCategory = new Category();
   final TextEditingController _controller = new TextEditingController();
@@ -28,7 +36,60 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
 
 
 
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
 
+    if(widget.service == null){
+      _items = new List(0);
+    }else{
+      _items = widget.service;
+      print(_items.toString());
+    }
+   }
+  _getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userList = prefs.getStringList("user");
+    });
+  }
+  Future _deleteUser() async {
+    List<String> user = new List(0);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('user', user);
+  }
+  Future<String> getDetails(String id) async {
+    final response = await http.post(
+      "http://turbalkom.falsudan.com/api/forms/service_providers",
+      headers: {
+        "Accept": "application/json"
+      },
+      body: {
+        'service_id': id
+        //image': image,
+      },
+    );
+    setState(() {
+       if(json.decode(response.body)["data"]["service_providers_category"].toString().length >0){
+
+        setState(() {
+          isCount = 1;
+          map= json.decode(response.body)["data"]["service_providers_category"];
+          _serv = List.from(map.values).toList();
+
+          if(_serv.length >0){
+            isCount = 1;
+          }
+        });
+
+      }
+
+    });
+
+    //List responseJson = json.decode(response.body)["data"];
+    return "done";
+  }
   void showMessage(String message, [MaterialColor color = Colors.red]) {
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(backgroundColor: color, content: new Text(message)));
@@ -79,16 +140,11 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                             onChanged: (String newValue) {
                               setState(() {
                                 newCategory.name = newValue;
-                                _color = newValue;
+                                _items = _items.where((i) =>  i["name"].toString().contains(newValue)).toList();
                                 state.didChange(newValue);
                               });
                             },
-                            items: _provider.map((String value) {
-                              return new DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
+
                           ),
                         ),
                       );
@@ -117,7 +173,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
@@ -151,7 +207,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
@@ -185,7 +241,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
@@ -219,7 +275,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
@@ -253,7 +309,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
@@ -283,11 +339,11 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                             onChanged: (String newValue) {
                               setState(() {
                                 newCategory.name = newValue;
-                                _color = newValue;
-                                state.didChange(newValue);
+                                _items = _items.where((i) =>  i["name"].toString().contains(newValue)).toList();
+                                 state.didChange(newValue);
                               });
                             },
-                            items: _space.map((String value) {
+                            items: _provider.map((String value) {
                               return new DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value),
