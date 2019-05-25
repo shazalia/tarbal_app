@@ -1,43 +1,26 @@
-import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:tarbalcom/model/Category.dart';
+ 
+class Services {
+  static const String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
 
-
-class ContactService {
-  static const _serviceUrl = 'http://turbalkom.falsudan.com/api/forms/service_providers';
-  static final _headers = {'success': 'application/json'};
-
-  Future<Category> createContact(Category category) async {
+  static Future<List<Category>> getPhotos() async {
     try {
-      String json = _toJson(category);
-      final response =
-      await http.get(_serviceUrl, headers: _headers);
-      var c = _fromJson(response.body);
-      return c;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        List<Category> list = parsePhotos(response.body);
+        return list;
+      } else {
+        throw Exception("Error");
+      }
     } catch (e) {
-      print('Server Exception!!!');
-      print(e);
-      return null;
+      throw Exception(e.toString());
     }
   }
 
-  Category _fromJson(String jsonContact) {
-    Map<String, dynamic> map = json.decode(jsonContact);
-    var category = new Category();
-    category.id = map['id'];
-    category.name = map['name'];
-
-    return category;
-  }
-
-  String _toJson(Category category) {
-    var mapData = new Map();
-    mapData["id"] = category.id;
-    mapData["name"] = category.name;
-
-    String jsonContact = json.encode(mapData);
-    return jsonContact;
+  static List<Category> parsePhotos(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Category>((json) => Category.fromJson(json)).toList();
   }
 }

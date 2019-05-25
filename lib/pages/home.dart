@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarbalcom/services/ServiceProvScreen.dart';
+import 'package:tarbalcom/services/servicFarm.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -28,17 +29,8 @@ class _HomeScreenState extends State<HomeScreen>{
   var map;
   void onSubmit(int unit, int count,String service) {
 
-    _loading();
-    placeOrderDetailed(userList[0],service,count,unit).whenComplete(() {
-      if (postStatus == 200) {
-        Navigator.pop(context);
-        _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-      } else {
-        Navigator.pop(context);
-        _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-      }
-    });
+ 
+ 
 
     //print("type: "+result.toString()+"ben: "+ben.toString()+"desiel: "+des.toString());
 
@@ -234,30 +226,30 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
                               getDetails(_items[index]["id"].toString()).whenComplete(() {
-                                if(_items[index]["id"]==1){
+                                if(_items[index]["id"]==2){
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
                                   _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                 });
                                 }
-                                else if(_items[index]["id"]==2){
+                                else if(_items[index]["id"]==1){
                                   setState(() {
                                     scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu2(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                    _modalBottomSheetMenu2(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                   });
 
                                 }
                                 else if(_items[index]["id"]==3){
                                   setState(() {
                                     scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu3(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                    _modalBottomSheetMenu3(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                   });
 
                                 }
                                 else if(_items[index]["id"]==5){
                                   setState(() {
                                     scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu4(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                    _modalBottomSheetMenu4(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                   });
 
                                 }
@@ -618,7 +610,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                     minWidth: 20,
                                     onPressed: () {
                                       Navigator.pushReplacement(context,
-                                          new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
 
                                     },
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
@@ -674,45 +666,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     // itemExtent: 10.0,
                     //reverse: true, //makes the list appear in descending order
                     itemBuilder: (BuildContext context, int index) {
-                      return new Container(
-                        child: Column(
-                          children: <Widget>[
-                            index !=0?Container(
-                              margin: EdgeInsets.only(left: 20,right: 20),
-                              height: 1,
-                              color: Color(0x331F6E46),
-                            ):Container(),
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    _details[index]["value"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    "   :   ",
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    _details[index]["label"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
-                                  ),
-
-
-                                ],
-
-                              ),
-                            ),
-
-
-
-                          ],
-                        ),
-                      );
+                    
                     }
                 )
 
@@ -728,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  void _modalBottomSheetMenu2(List _details,String name, String desc,String id){
+  void _modalBottomSheetMenu2(List _details,String name,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
@@ -836,16 +790,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
                                       _loading();
-                                      placeOrder(userList[0],id).whenComplete(() {
-                                        if (postStatus == 200) {
-                                          Navigator.pop(context);
-                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        } else {
-                                          Navigator.pop(context);
-                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        }
-                                      });
+                                
 
 
                                     },
@@ -878,11 +823,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
+                       
 
                       ],
 
@@ -956,7 +897,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  void _modalBottomSheetMenu3(List _details,String name, String desc,String id){
+  void _modalBottomSheetMenu3(List _details,String name,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
@@ -1063,17 +1004,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-                                      _loading();
-                                      placeOrder(userList[0],id).whenComplete(() {
-                                        if (postStatus == 200) {
-                                          Navigator.pop(context);
-                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        } else {
-                                          Navigator.pop(context);
-                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        }
-                                      });
+                    
 
 
                                     },
@@ -1106,11 +1037,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
+                    
 
                       ],
 
@@ -1184,7 +1111,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  void _modalBottomSheetMenu4(List _details,String name, String desc,String id){
+  void _modalBottomSheetMenu4(List _details,String name,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
@@ -1286,25 +1213,12 @@ class _HomeScreenState extends State<HomeScreen>{
                                     //minWidth: 200.0,
                                     height: 30.0,
                                     minWidth: 20,
-                                    onPressed: () {
-
-
-
-
-                                      _loading();
-                                      placeOrder(userList[0],id).whenComplete(() {
-                                        if (postStatus == 200) {
-                                          Navigator.pop(context);
-                                          _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        } else {
-                                          Navigator.pop(context);
-                                          _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        }
-                                      });
-
+                                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                          new MaterialPageRoute(builder: (BuildContext context) => servicFarmScreen()));
 
                                     },
+                                
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
@@ -1312,19 +1226,7 @@ class _HomeScreenState extends State<HomeScreen>{
                             )
                         ),
 
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
+                     
 
                       ],
 
@@ -1334,11 +1236,7 @@ class _HomeScreenState extends State<HomeScreen>{
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
+                     
 
                       ],
 
@@ -1349,58 +1247,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-            Expanded(
-                child:ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: _details.length,
-                    // itemExtent: 10.0,
-                    //reverse: true, //makes the list appear in descending order
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Container(
-                        child: Column(
-                          children: <Widget>[
-                            index !=0?Container(
-                              margin: EdgeInsets.only(left: 20,right: 20),
-                              height: 1,
-                              color: Color(0x331F6E46),
-                            ):Container(),
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    _details[index]["value"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    "   :   ",
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    _details[index]["label"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
-                                  ),
-
-
-                                ],
-
-                              ),
-                            ),
-
-
-
-                          ],
-                        ),
-                      );
-                    }
-                )
-
-            ),
+         
 
           ],
         ),
