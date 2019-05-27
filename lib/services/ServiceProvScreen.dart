@@ -2,43 +2,45 @@ import 'dart:async';
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
- import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 import 'package:tarbalcom/model/Category.dart';
- 
+  
 class ServiceProvScreen extends StatefulWidget {
+  
   @override
   _ServiceProvScreenState createState() => new _ServiceProvScreenState();
 }
 
 class _ServiceProvScreenState extends State<ServiceProvScreen> {
+     List<Category> listCategory;
 
-  List<Provider> listProvinces;
-  Provider _selectedProvince;
+ var map;
+   Category _selectedCategory;
+  final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
+Future<Category> getCategory() async {
+    var res = await http
+        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+    var resBody = json.decode(res.body)["data"];
+  
+      setState(() {
+      listCategory = map;
+    });
 
-   Future<List<Provider>> getProvinceList() async {
-     final response = await http.get(
-      'http://turbalkom.falsudan.com/api/forms/service_providers',
-      headers: {
-        "Accept": "application/json"
-      },
+    print(resBody);
+
+    return Category.fromJson(resBody);
+  }
+  
+  
+  
     
-    );
-        List<Provider> list = parseProvinces(response.body);
-           return list;
-
-  }
-
-  List<Provider> parseProvinces(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-
-    return parsed.map<Provider>((json) => Provider.fromJson(json)).toList();
-  }
-
-
+ 
+   
+  
   @override
   void initState() {
-
-    getProvinceList();
+ 
+    getCategory();
 
     super.initState();
   }
@@ -59,22 +61,24 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
                 Icons.account_balance,
                 color: Colors.pink,
               ),
-              labelText:"service_providers_category"
+              labelText:"فئة مزودو الخدمات"
           ),
-          isEmpty: _selectedProvince == null,
+          isEmpty: _selectedCategory == null,
           child: new DropdownButtonHideUnderline(
-            child: new DropdownButton<Provider>(
-              value: _selectedProvince,
+            child: new DropdownButton<Category>(
+              value: _selectedCategory,
               isDense: true,
-              onChanged: (Provider newValue) {
+              onChanged: (Category newValue) {
                 setState(() {
-                  _selectedProvince = newValue;
+                  _selectedCategory = newValue;
                 });
               },
-              items: listProvinces?.map((Provider value) {
-            return new DropdownMenuItem<Provider>(
+              items: listCategory?.map((Category value) {
+            return new DropdownMenuItem<Category>(
               value: value,
-              child: new Text(value.category.name, style: new TextStyle(fontSize: 16.0),),
+              child: new Text(value.prov.name
+              ,style: new TextStyle(fontSize: 16.0),),
+            
             );
           })?.toList(),
 
