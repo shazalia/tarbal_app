@@ -57,7 +57,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
           decoration: InputDecoration(
               suffixIcon: new Icon(
                 Icons.account_balance,
-                color: Colors.pink,
+                color: Colors.green,
               ),
               labelText:"service_providers_category"
           ),
@@ -77,8 +77,6 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
               child: new Text(value.category.name, style: new TextStyle(fontSize: 16.0),),
             );
           })?.toList(),
-
-              
             ),
           ),
         ),
