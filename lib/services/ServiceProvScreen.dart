@@ -20,7 +20,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        List <dynamic> dropDownslist  = List();
        List <String> dropDownsliststring  = List();
        List<Widget> dropDownsWedgit = new List();
-
+          List <String> temp  = new List();
 
 
       //  catDetailes _catDetailes;
@@ -28,9 +28,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
 
 
 
- 
- var map;
-   Data _selectedCategory;
+
   final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
 void  getCategory() async {
     var res = await http
@@ -43,7 +41,7 @@ void  getCategory() async {
      print(k),
      provider=v,
 
-       
+       dropdownValue.clear(),
 
      provider.forEach((v)=>{ // catlist level
       //  _catDetailes=new catDetailes.fromJson(json.decode(v.toString())),
@@ -65,9 +63,11 @@ void  getCategory() async {
    
         print ('New Provider List: '),
         print(dropdownValue.toString()), 
+
         dropDownsliststring.add(dropdownValue.toString()),
-       dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue)),
-        dropdownValue.clear(),
+     
+        dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),
+       
    
    // ptovider level
    });
@@ -76,7 +76,7 @@ void  getCategory() async {
       setState(() {
      });
 
-    print(resBody);
+    //print(resBody);
 
   }
   
@@ -98,7 +98,7 @@ void  getCategory() async {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(title: new Text("rfgf"),),
-      body:
+      body://new DropDownClass(name: "k",list: dropdownValue),
       Column(
         children:dropDownsWedgit,
       //    dropDownslist.map((dynamic drop){
