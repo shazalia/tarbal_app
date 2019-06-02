@@ -614,7 +614,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                       new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
 
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text('اطلب الان', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
@@ -765,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                       new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
 
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text(' اطلب الان', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
@@ -917,7 +917,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                       new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
 
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text('اطلب الان', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
@@ -1069,7 +1069,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                       new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
 
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text(' اطلب الان', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
