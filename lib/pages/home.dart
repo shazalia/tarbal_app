@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarbalcom/services/ServiceProvScreen.dart';
+import 'package:tarbalcom/services/AgriInputsScreen.dart';
 import 'package:tarbalcom/services/servicFarm.dart';
 import 'login.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+//
 class HomeScreen extends StatefulWidget {
   final List items;
   final List cats;
@@ -25,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen>{
   int postStatus;
   List<String> userList;
   List<DropdownMenuItem<String>> _dropCatsSub;
-  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
+  List _items = new List(0),_cats = new List(0) ,_units= new List(0);
   var map;
   void onSubmit(int unit, int count,String service) {
 
@@ -229,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                 if(_items[index]["id"]==2){
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
-                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  _modalBottomSheetMenu(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                 });
                                 }
                                 else if(_items[index]["id"]==1){
@@ -517,7 +518,310 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 
 
-  void _modalBottomSheetMenu(List _details,String name, String desc,String id){
+  void _modalBottomSheetMenu(String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
+
+    double screenheught = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+
+
+    scaffoldKey.currentState.showBottomSheet((context){
+      return new Container(
+        //color: Color(0xFFEEEEEE),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+            ],
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+          ),
+        ),
+
+        child: new Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
+
+                  ],
+                )
+
+            ),
+            Container(
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+
+
+                        Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
+                                  elevation: 5.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+
+                                    },
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+
+                    ),
+                    SizedBox(height: 10,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
+
+                      ],
+
+                    ),
+                  ],
+                )
+            ),
+
+
+ 
+
+          ],
+        ),
+
+      );
+
+
+    });
+
+
+  }
+  void _modalBottomSheetMenu2(String name, String desc,String id){
+    String _currentCatSub,_id;
+    String cValue = "all";
+    bool isBezin = false;
+    bool isDesiel = false;
+    List _uints;
+    List _values;
+    int unit_id;
+
+    double screenheught = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+
+
+    scaffoldKey.currentState.showBottomSheet((context){
+      return new Container(
+        //color: Color(0xFFEEEEEE),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+              Color(0x111F6E46),
+            ],
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+          ),
+        ),
+
+        child: new Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black54,
+                      ),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      child: Image.network(
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
+                          height: 150,
+                          fit:BoxFit.fill
+
+                      ),
+                    ),
+
+
+                  ],
+                )
+
+            ),
+            Container(
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+
+
+                        Expanded(
+                            flex: 2,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Material(
+                                  color: Color(0xFF1F6E46),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shadowColor: Colors.green,
+                                  elevation: 5.0,
+                                  child: MaterialButton(
+                                    //minWidth: 200.0,
+                                    height: 30.0,
+                                    minWidth: 20,
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
+
+                                    },
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
+
+                      ],
+
+                    ),
+                    SizedBox(height: 10,),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
+
+                      ],
+
+                    ),
+                  ],
+                )
+            ),
+
+
+
+         
+
+          ],
+        ),
+
+      );
+
+
+    });
+
+
+  }
+  void _modalBottomSheetMenu3(String name, String desc,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
@@ -657,20 +961,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-            Expanded(
-                child:ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: _details.length,
-                    // itemExtent: 10.0,
-                    //reverse: true, //makes the list appear in descending order
-                    itemBuilder: (BuildContext context, int index) {
-                    
-                    }
-                )
-
-            ),
+       
 
           ],
         ),
@@ -682,7 +973,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
   }
-  void _modalBottomSheetMenu2(List _details,String name,String id){
+  void _modalBottomSheetMenu4(String name, String desc,String id){
     String _currentCatSub,_id;
     String cValue = "all";
     bool isBezin = false;
@@ -693,17 +984,6 @@ class _HomeScreenState extends State<HomeScreen>{
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    void changedDropDownItemSub(String selectedCat) {
-      setState(() {
-        _currentCatSub = selectedCat;
-        for(int x=1;x<_values.length;x++){
-          if(_values[x] == selectedCat){
-            unit_id = x;
-          }
-        }
-      }
-      );
-    }
 
 
 
@@ -746,8 +1026,8 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomRight: Radius.circular(8.0),
                       ),
                       child: Image.network(
-                          'https://www.israel21c.org/wp-content/uploads/2017/06/shutterstock_precisionag-1168x657.jpg',
-                          width: 250,
+                          'https://wallpapercave.com/wp/wp2916561.jpg',
+                           width: 250,
                           height: 150,
                           fit:BoxFit.fill
 
@@ -785,440 +1065,10 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
-
-
-
-
-                                      _loading();
-                                
-
-
-                                    },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
-
-                      ],
-
-                    ),
-                    SizedBox(height: 10,),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                       
-
-                      ],
-
-                    ),
-                  ],
-                )
-            ),
-
-
-
-            Expanded(
-                child:ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: _details.length,
-                    // itemExtent: 10.0,
-                    //reverse: true, //makes the list appear in descending order
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Container(
-                        child: Column(
-                          children: <Widget>[
-                            index !=0?Container(
-                              margin: EdgeInsets.only(left: 20,right: 20),
-                              height: 1,
-                              color: Color(0x331F6E46),
-                            ):Container(),
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    _details[index]["value"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    "   :   ",
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    _details[index]["label"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
-                                  ),
-
-
-                                ],
-
-                              ),
-                            ),
-
-
-
-                          ],
-                        ),
-                      );
-                    }
-                )
-
-            ),
-
-          ],
-        ),
-
-      );
-
-
-    });
-
-
-  }
-  void _modalBottomSheetMenu3(List _details,String name,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
-
-    double screenheught = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    void changedDropDownItemSub(String selectedCat) {
-      setState(() {
-        _currentCatSub = selectedCat;
-        for(int x=1;x<_values.length;x++){
-          if(_values[x] == selectedCat){
-            unit_id = x;
-          }
-        }
-      }
-      );
-    }
-
-
-
-    scaffoldKey.currentState.showBottomSheet((context){
-      return new Container(
-        //color: Color(0xFFEEEEEE),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-            ],
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-          ),
-        ),
-
-        child: new Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.black54,
-                      ),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      child: Image.network(
-                          'https://wallpaperaccess.com/full/803484.jpg',
-                          width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
-
-                      ),
-                    ),
-
-
-                  ],
-                )
-
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-
-
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Material(
-                                  color: Color(0xFF1F6E46),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
-                                  elevation: 5.0,
-                                  child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
-                                    minWidth: 20,
-                                    onPressed: () {
-
-
-
-
-                    
-
-
-                                    },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
-
-                      ],
-
-                    ),
-                    SizedBox(height: 10,),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                    
-
-                      ],
-
-                    ),
-                  ],
-                )
-            ),
-
-
-
-            Expanded(
-                child:ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: _details.length,
-                    // itemExtent: 10.0,
-                    //reverse: true, //makes the list appear in descending order
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Container(
-                        child: Column(
-                          children: <Widget>[
-                            index !=0?Container(
-                              margin: EdgeInsets.only(left: 20,right: 20),
-                              height: 1,
-                              color: Color(0x331F6E46),
-                            ):Container(),
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    _details[index]["value"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    "   :   ",
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-                                  ),
-
-                                  Text(
-                                    _details[index]["label"],
-                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
-                                  ),
-
-
-                                ],
-
-                              ),
-                            ),
-
-
-
-                          ],
-                        ),
-                      );
-                    }
-                )
-
-            ),
-
-          ],
-        ),
-
-      );
-
-
-    });
-
-
-  }
-  void _modalBottomSheetMenu4(List _details,String name,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
-
-    double screenheught = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    void changedDropDownItemSub(String selectedCat) {
-      setState(() {
-        _currentCatSub = selectedCat;
-        for(int x=1;x<_values.length;x++){
-          if(_values[x] == selectedCat){
-            unit_id = x;
-          }
-        }
-      }
-      );
-    }
-
-
-
-    scaffoldKey.currentState.showBottomSheet((context){
-      return new Container(
-        //color: Color(0xFFEEEEEE),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-            ],
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-          ),
-        ),
-
-        child: new Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.black54,
-                      ),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      child: Image.network(
-                          'http://johnpauloshea.ie/wp-content/uploads/2016/02/Agriculture.jpg',
-                          width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
-
-                      ),
-                    ),
-
-
-                  ],
-                )
-
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-
-
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Material(
-                                  color: Color(0xFF1F6E46),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
-                                  elevation: 5.0,
-                                  child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
-                                    minWidth: 20,
-                                                    onPressed: () {
                                       Navigator.pushReplacement(context,
-                                          new MaterialPageRoute(builder: (BuildContext context) => servicFarmScreen()));
+                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
 
                                     },
-                                
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
@@ -1226,7 +1076,19 @@ class _HomeScreenState extends State<HomeScreen>{
                             )
                         ),
 
-                     
+                        Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  name,
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                ),
+                              ],
+                            )
+                        ),
 
                       ],
 
@@ -1236,7 +1098,11 @@ class _HomeScreenState extends State<HomeScreen>{
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                     
+                        Text(
+                          desc,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                        ),
 
                       ],
 
@@ -1246,8 +1112,7 @@ class _HomeScreenState extends State<HomeScreen>{
             ),
 
 
-
-         
+ 
 
           ],
         ),
