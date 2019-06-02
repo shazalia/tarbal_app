@@ -96,21 +96,26 @@ void  getCategory() async {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(title: new Text("rfgf"),),
-      body://new DropDownClass(name: "k",list: dropdownValue),
-      Column(
-        children:dropDownsWedgit,
-      //    dropDownslist.map((dynamic drop){
-      //       return DropDownClass(list: drop,name: "name",);
-        
-
-
-
-      // }).toList()
-    
- 
+   return Scaffold(
+      appBar: AppBar(
+        title: Text('مزوِّدو الخدمة'),
+          backgroundColor: Color(0xFF1F6E46),
+      ),
+      body: Center(
+      child:Container(
+          padding: EdgeInsets.only(
+                                    top: 15.0,
+                                    bottom: 5.0,
+                                    left: 25.0,
+                                    right: 25.0),
+          child:     Column(
+       
+            children:dropDownsWedgit,
+     
     )
+       
+      ),
+   )
     );
   }
 
@@ -126,15 +131,22 @@ class DropDownClass extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-                  return  DropdownButton(
-                                     hint: Text(name), // Not necessary for Option 1
+   return Container(
+     
+    width: 300.0,
+    child: DropdownButtonHideUnderline(
+      child: DropdownButton(
+        
+     hint: Text(name), // Not necessary for Option 1
                                        items: list.map((location) {
                                         return DropdownMenuItem(
                                           child: new Text(location,
-                                           style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 8.0,
-                                          letterSpacing: 0.5),
+                                                  style: Theme.of(context).textTheme.title,
+
+                                          //  style: TextStyle(
+                                          // color: Colors.black45,
+                                          // fontSize: 8.0,
+                                          // letterSpacing: 0.5),
                                           ),
                                           
                                           value: location,
@@ -142,17 +154,11 @@ class DropDownClass extends StatelessWidget{
                                       }).toList(),
                                   // value: selectedcity,
                                       onChanged: (newValue) {
-                              
-                                // List<String>  selectedTownList = newValue.toString().split('.');
-                                //  globals.selectedTown = selectedTownList [1];
-                                //  globals.selectedTownid = selectedTownList [0];
-                               
-                                //         setState(() {                                        
-                                //         }
-                                //         );
+                        
                                       },
-                                    );
-  
+      ),
+    ),
+);
   }
 
 
