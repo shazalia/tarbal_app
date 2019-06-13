@@ -109,8 +109,8 @@ void  getCategory() async {
       body: {
         'user_id': clientId,
         'service_providers_category':serviceProvider,
-        'farm_area':farmArea,
-        'number_of_farm_animals':numberFarmAnimals,
+        'farm_area':farmArea.toString(),
+        'number_of_farm_animals':numberFarmAnimals.toString(),
         'irrigation_method':irrigationMethod,
         'source_of_irrigation':irrigationSource,
         'power_source':powerSource,
@@ -214,43 +214,34 @@ void  getCategory() async {
     
         super.initState();
       }
-    
-      @override
+          @override
       Widget build(BuildContext context) {
        return Scaffold(
           appBar: AppBar(
             title: Text('مزوِّدو الخدمة'),
               backgroundColor: Color(0xFF1F6E46),
           ),
-          body: Center(
-          child:  Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                           Expanded(
-                               child:Column(
+           body:  new SingleChildScrollView(
+				  // child: Center(
+                child: new Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                       children: <Widget>[
+                              Container(
+                                    height: 120.0,
+                                    width: 120.0,
+                               child:Column(  
                                 children:dropDownsWedgit,
                                 )
                            ),
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                
-                                Material(
+                              Container(
+                                //  padding: EdgeInsets.only(left: 20,right: 20,top:120),
+                               child: Material(
                                   color: Color(0xFF1F6E46),
                                   borderRadius: BorderRadius.circular(30.0),
                                   shadowColor: Colors.green,
                                   elevation: 5.0,
                                   child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
                                       if(isCount == 1){
@@ -276,23 +267,20 @@ void  getCategory() async {
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
-                              ],
-                            )
-                        ),
+                      
+                           ),
                      
                  
-                      ],
+                     ],
 
-                    ),
-                    SizedBox(height: 10,),
-
-             ],
                 )
+				// )
             ),
-       )
+       
         );
       }
     
+     
       postCategory(String clientId,List  serviceProvider,List farmArea,
    List numberFarmAnimals,List irrigationMethod,List irrigationSource,
     List powerSource,List workType) {}
@@ -325,10 +313,8 @@ class DropDownClass extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
    return Container(
-           padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
-
-    width: 200.0,
-    child: DropdownButtonHideUnderline(
+          //  padding: EdgeInsets.only(left: 0.0,right: 0.0,bottom: 30),
+     child: DropdownButtonHideUnderline(
       child: DropdownButton(
      hint: Text(name), // Not necessary for Option 1
                        items: list.map((location) {
