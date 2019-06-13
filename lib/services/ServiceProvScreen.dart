@@ -128,7 +128,12 @@ void  getCategory() async {
 
     }
   }
-    
+
+
+      List _irrigationMethod = new List(0),_serviceProvider = new List(0),_farmArea= new List(0),_numberFarmAnimals= new List(0),
+       _irrigationSource = new List(0),_powerSource = new List(0),
+       _workType = new List(0);
+
    void onSubmit(String clientId,List  serviceProvider,List farmArea,
    List numberFarmAnimals,List irrigationMethod,List irrigationSource,
     List powerSource,List workType) {
@@ -221,21 +226,21 @@ void  getCategory() async {
             title: Text('مزوِّدو الخدمة'),
               backgroundColor: Color(0xFF1F6E46),
           ),
-           body:  new SingleChildScrollView(
-				  // child: Center(
+           body:  Center (
+            child :SingleChildScrollView(
+			 
                 child: new Column(
                    mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                        children: <Widget>[
                               Container(
-                                    height: 120.0,
-                                    width: 120.0,
+                                
                                child:Column(  
                                 children:dropDownsWedgit,
                                 )
                            ),
                               Container(
-                                //  padding: EdgeInsets.only(left: 20,right: 20,top:120),
+                                 padding: EdgeInsets.only(left: 20,right: 20,bottom:30),
                                child: Material(
                                   color: Color(0xFF1F6E46),
                                   borderRadius: BorderRadius.circular(30.0),
@@ -246,7 +251,14 @@ void  getCategory() async {
                                     onPressed: () {
                                       if(isCount == 1){
                                         showDialog(
-                                            context: context, child: new DropDownClass(onSubmit: onSubmit,id: clientId, ));
+                                          // this.farmArea, this.numberFarmAnimals, this.irrigationMethod, this.irrigationSource, this.powerSource, this.workType
+                                            context: context, child: new DropDownClass(onSubmit: onSubmit,id: clientId, farmArea: _farmArea, irrigationMethod: _irrigationMethod,
+                                             irrigationSource:_irrigationSource, name: null, numberFarmAnimals: _numberFarmAnimals,
+                                              powerSource: _powerSource, serviceProvider: _serviceProvider, workType: _workType,
+
+                                            // 
+                                            
+                                            ));
                                       }else{
                                         _loading();
                                         placeOrder(clientId,serviceProvider,farmArea
@@ -274,10 +286,11 @@ void  getCategory() async {
                      ],
 
                 )
-				// )
+			 
             ),
        
-        );
+        ),
+       );
       }
     
      
@@ -293,50 +306,100 @@ void  getCategory() async {
 typedef void MyFormCallback(String clientId,List  serviceProvider,List farmArea,
    List numberFarmAnimals,List irrigationMethod,List irrigationSource,
     List powerSource,List workType);
-class DropDownClass extends StatelessWidget{
+class DropDownClass extends StatefulWidget{
     final MyFormCallback onSubmit;
  
-    DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id})
+    DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, 
+     @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
+     ,@required this.irrigationMethod,
+    @required this.irrigationSource,@required this.powerSource,@required this.workType})
      :assert(name!=null), super(key: key);
      final String name;
-      List serviceProvider,
-       farmArea,
-       numberFarmAnimals,
-       irrigationMethod,
-       irrigationSource,
-       powerSource,
-       workType;
+      final List serviceProvider;
+        final List farmArea;
+        final List numberFarmAnimals;
+        final List irrigationMethod;
+        final List irrigationSource;
+        final List powerSource;
+       final List  workType;
  
   final List list;
  final String id;
-
+  
   @override
-  Widget build(BuildContext context) {
-   return Container(
-          //  padding: EdgeInsets.only(left: 0.0,right: 0.0,bottom: 30),
-     child: DropdownButtonHideUnderline(
-      child: DropdownButton(
-     hint: Text(name), // Not necessary for Option 1
-                       items: list.map((location) {
-                        return DropdownMenuItem(
-                           child: new Text(location,
-                                           style: TextStyle(
-                                          color: Color(0xFF880E4F),
-                                          fontSize: 8.0,
-                                          letterSpacing: 0.5),
-                                          ),
-                                          value: location,
-                                        );
-                                      }).toList(),
-                                  // value: selectedcity,
-                                      onChanged: (location) {
-                        
-                                      },
-      ),
-    ),
+  _DropDownClass createState() => new _DropDownClass(this.name,this.list);
+  
+ 
+  }
+  
+  class _DropDownClass extends State<DropDownClass> {
+         final String name;
+         List _serviceProvider;
+         List _farmArea;
+         List _numberFarmAnimals;
+         List _irrigationMethod;
+         List _irrigationSource;
+         List _powerSource;
+         List  _workType;
+         List _values;
 
-);
+ 
+   final List list;
+   int serviceId;
+  String _currentCatSub,id;
+
+  _DropDownClass(this.name, this.list);
+  
+   void initState() {
+      super.initState();
+ 
+  
+  
+  }
+  void changedDropDownItemSub(String selectedCat) {
+    setState(() {
+      _currentCatSub = selectedCat;
+      for(int x=1;x<_values.length;x++){
+        if(_values[x] == selectedCat){
+          serviceId = x;
+        }
+      }
+    }
+    );
   }
 
+    @override
+    Widget build(BuildContext context) {
+      
+     return Container(
+             padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 10),
+       child: DropdownButtonHideUnderline(
+        child: DropdownButton(
+       hint: Text(name), // Not necessary for Option 1
+                         items: list.map((location) {
+                          return DropdownMenuItem(
+                             child: new Text(location,
+                                             style: TextStyle(
+                                            color: Color(0xFF880E4F),
+                                            fontSize: 8.0,
+                                            letterSpacing: 0.5),
+                                            ),
+                                            value: location,
+                                          );
+                                        }).toList(),
+                                        //  value: _currentCatSub,
+                                    // value: selectedcity,
+                                        onChanged: (changedDropDownItemSub) {
+                          
+                                        },
+                                        
+                                    // onChanged: changedDropDownItemSub,
 
+        ),
+      ),
+  
+  );
+    }
+  
+  
 }

@@ -570,13 +570,13 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomLeft: Radius.circular(8.0),
                         bottomRight: Radius.circular(8.0),
                       ),
-                      child: Image.network(
-                          'https://wallpapercave.com/wp/wp2916561.jpg',
-                           width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
+                      // child: Image.network(
+                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
+                      //      width: 250,
+                      //     height: 150,
+                      //     fit:BoxFit.fill
 
-                      ),
+                      // ),
                     ),
 
 
@@ -721,13 +721,13 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomLeft: Radius.circular(8.0),
                         bottomRight: Radius.circular(8.0),
                       ),
-                      child: Image.network(
-                          'https://wallpapercave.com/wp/wp2916561.jpg',
-                           width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
+                      // child: Image.network(
+                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
+                      //      width: 250,
+                      //     height: 150,
+                      //     fit:BoxFit.fill
 
-                      ),
+                      // ),
                     ),
 
 
@@ -873,13 +873,13 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomLeft: Radius.circular(8.0),
                         bottomRight: Radius.circular(8.0),
                       ),
-                      child: Image.network(
-                          'https://wallpapercave.com/wp/wp2916561.jpg',
-                           width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
+                      // child: Image.network(
+                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
+                      //      width: 250,
+                      //     height: 150,
+                      //     fit:BoxFit.fill
 
-                      ),
+                      // ),
                     ),
 
 
@@ -1025,13 +1025,13 @@ class _HomeScreenState extends State<HomeScreen>{
                         bottomLeft: Radius.circular(8.0),
                         bottomRight: Radius.circular(8.0),
                       ),
-                      child: Image.network(
-                          'https://wallpapercave.com/wp/wp2916561.jpg',
-                           width: 250,
-                          height: 150,
-                          fit:BoxFit.fill
+                      // child: Image.network(
+                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
+                      //      width: 250,
+                      //     height: 150,
+                      //     fit:BoxFit.fill
 
-                      ),
+                      // ),
                     ),
 
 
