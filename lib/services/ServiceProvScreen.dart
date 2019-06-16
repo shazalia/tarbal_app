@@ -1,5 +1,6 @@
 // import 'package:applanga_flutter/applanga_flutter.dart';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ class ServiceProvScreen extends StatefulWidget {
 }
 
 class _ServiceProvScreenState extends State<ServiceProvScreen> {
+ 
     List _items  = new List(0),_dets= new List(0),name= new List(0);
     int postStatus;
       int check = 0,isCount = 0;
@@ -28,14 +30,19 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        Map <String, dynamic> data;
        List<dynamic> provider;
        List<String> dropdownValue = List();
-       List <dynamic> dropDownslist  = List();
+       List<String> textValue = List();
+      //  List <dynamic> dropDownslist  = List();
        List <String> dropDownsliststring  = List();
        List<Widget> dropDownsWedgit = new List();
+       List<Widget> textWedgit = new List();
+        
+
           List <String> temp  = new List();
 
 
       //  catDetailes _catDetailes;
        Map <String, dynamic> _catDetailes ;
+       Map <String, dynamic> _catType ;
 
 
 
@@ -45,7 +52,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
       userList = prefs.getStringList("user");
     });
   }
-  final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
+  final String url = "http://www.amock.io/api/shazawdidi/service_providers2";
 void  getCategory() async {
     var res = await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
@@ -60,31 +67,45 @@ void  getCategory() async {
        dropdownValue.clear(),
 
      provider.forEach((v)=>{ // catlist level
-      //  _catDetailes=new catDetailes.fromJson(json.decode(v.toString())),
-      //  print(_catDetailes.name),
-      _catDetailes=v,
-   
-   _catDetailes.forEach((k1,v1)=>{ // cat details level
-     if(k1=="name"){
-       print(v1),
-       
-       dropdownValue.add(v1.toString()),
+ print(ValueNotifier),
+     _catType=v,
+     _catType.forEach((k,v)=>{
+     //  print(kt),
+      //  _catDetailes=vt,
+        // dropdownValue.clear(),
+    
+  //  vt.forEach((k1,v1)=>{
+    //  v1.forEach((k1,v1)=>{
+    //  print(v1), // cat details level
+     if(k=="name"){
+            print(v.toString()),
+          dropdownValue.add(v.toString()),
+     } else if(k=="name_n"){
+            print(v.toString()),
+          textValue.add(v.toString()),
         
      }
    
-  
-     }),// cat details level 
+  //  }),
+    //  }),
+
+
+
+     }),
+    
+ // cat details level 
     
      }),// catlist level
    
         print ('New Provider List: '),
         print(dropdownValue.toString()), 
 
-        dropDownsliststring.add(dropdownValue.toString()),
-     
-        dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),
-       
-   
+        // dropDownsliststring.add(dropdownValue.toString()),
+        // dropDownsliststring.add(textValue.toString()),
+      //textWedgit
+        dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),       
+        textWedgit.add(new TextClass(name:v,list: textValue.toList())),       
+    
    // ptovider level
    });
 
@@ -228,7 +249,6 @@ void  getCategory() async {
           ),
            body:  Center (
             child :SingleChildScrollView(
-			 
                 child: new Column(
                    mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,6 +258,10 @@ void  getCategory() async {
                                child:Column(  
                                 children:dropDownsWedgit,
                                 )
+                           ),
+                           Container(
+                              child:Column( 
+                             children: textWedgit,)
                            ),
                               Container(
                                  padding: EdgeInsets.only(left: 20,right: 20,bottom:30),
@@ -312,8 +336,8 @@ class DropDownClass extends StatefulWidget{
     DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, 
      @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
      ,@required this.irrigationMethod,
-    @required this.irrigationSource,@required this.powerSource,@required this.workType})
-     :assert(name!=null), super(key: key);
+    @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
+     :assert(name!=null||number!=null), super(key: key);
      final String name;
       final List serviceProvider;
         final List farmArea;
@@ -322,18 +346,24 @@ class DropDownClass extends StatefulWidget{
         final List irrigationSource;
         final List powerSource;
        final List  workType;
- 
+  final Text number;
   final List list;
+  final Text text;
  final String id;
+ //  final Text name2;
   
   @override
-  _DropDownClass createState() => new _DropDownClass(this.name,this.list);
+  _DropDownClass createState() => new _DropDownClass(this.name,this.list,this.number);
   
  
   }
   
   class _DropDownClass extends State<DropDownClass> {
+
+
+
          final String name;
+         final Text number;
          List _serviceProvider;
          List _farmArea;
          List _numberFarmAnimals;
@@ -348,7 +378,7 @@ class DropDownClass extends StatefulWidget{
    int serviceId;
   String _currentCatSub,id;
 
-  _DropDownClass(this.name, this.list);
+  _DropDownClass(this.name, this.list, this.number);
   
    void initState() {
       super.initState();
@@ -361,7 +391,12 @@ class DropDownClass extends StatefulWidget{
       _currentCatSub = selectedCat;
       for(int x=1;x<_values.length;x++){
         if(_values[x] == selectedCat){
-          serviceId = x;
+          _serviceProvider = x.toInt() as List;
+          _farmArea = x.toInt() as List;
+          _numberFarmAnimals = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
         }
       }
     }
@@ -371,8 +406,9 @@ class DropDownClass extends StatefulWidget{
     @override
     Widget build(BuildContext context) {
       
-     return Container(
-             padding: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 10),
+     return Column(children: <Widget>[
+       new Container(
+             padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
        child: DropdownButtonHideUnderline(
         child: DropdownButton(
        hint: Text(name), // Not necessary for Option 1
@@ -386,20 +422,140 @@ class DropDownClass extends StatefulWidget{
                                             ),
                                             value: location,
                                           );
-                                        }).toList(),
-                                        //  value: _currentCatSub,
-                                    // value: selectedcity,
+                                        }).toList(), 
                                         onChanged: (changedDropDownItemSub) {
-                          
-                                        },
-                                        
-                                    // onChanged: changedDropDownItemSub,
+                                        },                   // onChanged: changedDropDownItemSub,
 
         ),
       ),
   
-  );
+  ),
+//        new Container(
+//               padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
+//     child:TextFormField(
+//       // hin:Text(name),
+//     style: TextStyle(
+//         color: Colors.black,fontWeight: FontWeight.w300,
+//     ),
+//   decoration: InputDecoration(
+//     labelText:(name.toString()),
+    
+//   ),
+// )
+
+//       // child: Text(name),
+      
+
+//     )
+     
+     ],);
+
     }
-  
-  
+
+
 }
+
+
+class TextClass extends StatefulWidget{
+    final MyFormCallback onSubmit;
+ 
+    TextClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, 
+     @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
+     ,@required this.irrigationMethod,
+    @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
+     :assert(name!=null||number!=null), super(key: key);
+     final String name;
+      final List serviceProvider;
+        final List farmArea;
+        final List numberFarmAnimals;
+        final List irrigationMethod;
+        final List irrigationSource;
+        final List powerSource;
+       final List  workType;
+  final Text number;
+  final List list;
+  final Text text;
+ final String id;
+ //  final Text name2;
+  
+  @override
+  _TextClass createState() => new _TextClass(this.name,this.list,this.number);
+  
+ 
+  }
+  
+  class _TextClass extends State<TextClass> {
+
+
+
+         final String name;
+         final Text number;
+         List _serviceProvider;
+         List _farmArea;
+         List _numberFarmAnimals;
+         List _irrigationMethod;
+         List _irrigationSource;
+         List _powerSource;
+         List  _workType;
+         List _values;
+
+ 
+   final List list;
+   int serviceId;
+  String _currentCatSub,id;
+
+  _TextClass(this.name, this.list, this.number);
+  
+   void initState() {
+      super.initState();
+ 
+  
+  
+  }
+  void changedDropDownItemSub(String selectedCat) {
+    setState(() {
+      _currentCatSub = selectedCat;
+      for(int x=1;x<_values.length;x++){
+        if(_values[x] == selectedCat){
+          _serviceProvider = x.toInt() as List;
+          _farmArea = x.toInt() as List;
+          _numberFarmAnimals = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
+          _serviceProvider = x.toInt() as List;
+        }
+      }
+    }
+    );
+  }
+
+    @override
+    Widget build(BuildContext context) {
+      
+     return Column(children: <Widget>[
+ 
+       new Container(
+              padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
+    child:TextFormField(
+      // hin:Text(name),
+    style: TextStyle(
+        color: Colors.black,fontWeight: FontWeight.w300,
+    ),
+  decoration: InputDecoration(
+    labelText:(name.toString()),
+    
+  ),
+)
+
+      // child: Text(name),
+      
+
+    )
+     ],);
+
+    }
+
+
+}
+
+

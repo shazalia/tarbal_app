@@ -4,7 +4,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
- import 'package:tarbalcom/model/Data.dart';
   
 class AgriInputsScreen extends StatefulWidget {
   
@@ -20,7 +19,8 @@ class _AgriInputsScreenState extends State<AgriInputsScreen> {
        List <dynamic> dropDownslist  = List();
        List <String> dropDownsliststring  = List();
        List<Widget> dropDownsWedgit = new List();
-          List <String> temp  = new List();
+       List <String> temp  = new List();
+      
 
 
       //  catDetailes _catDetailes;
@@ -79,12 +79,6 @@ void  getFertilise() async {
     //print(resBody);
 
   }
-  
-  
-  
-    
- 
-   
   
   @override
   void initState() {
