@@ -67,24 +67,24 @@ void  getCategory() async {
        dropdownValue.clear(),
 
      provider.forEach((v)=>{ // catlist level
- print(ValueNotifier),
-     _catType=v,
-     _catType.forEach((k,v)=>{
-     //  print(kt),
-      //  _catDetailes=vt,
-        // dropdownValue.clear(),
-    
-  //  vt.forEach((k1,v1)=>{
-    //  v1.forEach((k1,v1)=>{
-    //  print(v1), // cat details level
-     if(k=="name"){
-            print(v.toString()),
-          dropdownValue.add(v.toString()),
-     } else if(k=="name_n"){
-            print(v.toString()),
-          textValue.add(v.toString()),
-        
-     }
+ print(v),
+     _catDetailes=v,
+   _catDetailes.forEach((k1,v1)=>{ 
+    // cat details level
+     if(k1==("name")){   
+             if(!k.toString().startsWith("n_")){
+                // print(k), 
+              dropdownValue.add(v1.toString()),
+             } else   if(!k.toString().startsWith("n_")){
+                textValue=v1,
+               textValue.add(v1.toString()),
+
+     },
+     
+             textWedgit.add(new TextClass(name: k,number:v1.toString(),list:textValue.toList())),       
+
+
+    }
    
   //  }),
     //  }),
@@ -96,16 +96,13 @@ void  getCategory() async {
  // cat details level 
     
      }),// catlist level
-   
+             // 
+
         print ('New Provider List: '),
         print(dropdownValue.toString()), 
-
-        // dropDownsliststring.add(dropdownValue.toString()),
-        // dropDownsliststring.add(textValue.toString()),
-      //textWedgit
+ 
         dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),       
-        textWedgit.add(new TextClass(name:v,list: textValue.toList())),       
-    
+
    // ptovider level
    });
 
@@ -337,7 +334,7 @@ class DropDownClass extends StatefulWidget{
      @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
      ,@required this.irrigationMethod,
     @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
-     :assert(name!=null||number!=null), super(key: key);
+     :assert(name!=null), super(key: key);
      final String name;
       final List serviceProvider;
         final List farmArea;
@@ -472,7 +469,7 @@ class TextClass extends StatefulWidget{
         final List irrigationSource;
         final List powerSource;
        final List  workType;
-  final Text number;
+  final String number;
   final List list;
   final Text text;
  final String id;
@@ -489,7 +486,7 @@ class TextClass extends StatefulWidget{
 
 
          final String name;
-         final Text number;
+         final String number;
          List _serviceProvider;
          List _farmArea;
          List _numberFarmAnimals;
@@ -542,7 +539,7 @@ class TextClass extends StatefulWidget{
         color: Colors.black,fontWeight: FontWeight.w300,
     ),
   decoration: InputDecoration(
-    labelText:(name.toString()),
+    labelText:(number.toString()),
     
   ),
 )
