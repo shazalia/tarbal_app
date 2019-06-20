@@ -6,14 +6,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
     
 class ServiceProvScreen extends StatefulWidget {
-  
+  //  final String name;
+
+  // const ServiceProvScreen({Key key, this.name}) :super(key: key);
   @override
   _ServiceProvScreenState createState() => new _ServiceProvScreenState();
 }
 
 class _ServiceProvScreenState extends State<ServiceProvScreen> {
  
-    List _items  = new List(0),_dets= new List(0),name= new List(0);
+    // List _items  = new List(0),_dets= new List(0),name= new List(0);
     int postStatus;
       int check = 0,isCount = 0;
      String clientId;
@@ -24,6 +26,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        irrigationSource,
        powerSource,
        workType;
+      //  final String name;
  
      List<String> userList;
        Map <String, dynamic> dataParent;
@@ -31,11 +34,13 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        List<dynamic> provider;
        List<String> dropdownValue = List();
        List<String> textValue = List();
+       List<String> cardValue = List();
       //  List <dynamic> dropDownslist  = List();
        List <String> dropDownsliststring  = List();
        List<Widget> dropDownsWedgit = new List();
-       List<Widget> textWedgit = new List();
-        
+       List<Widget> cardWedgit = new List();
+        List<Widget> textWedgit = new List();
+         
 
           List <String> temp  = new List();
 
@@ -43,6 +48,8 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
       //  catDetailes _catDetailes;
        Map <String, dynamic> _catDetailes ;
        Map <String, dynamic> _catType ;
+
+  _ServiceProvScreenState();
 
 
 
@@ -83,8 +90,8 @@ void  getCategory() async {
      
              textWedgit.add(new TextClass(name: k,number:v1.toString(),list:textValue.toList())),       
 
-
-    }
+}
+    
    
   //  }),
     //  }),
@@ -100,9 +107,13 @@ void  getCategory() async {
 
         print ('New Provider List: '),
         print(dropdownValue.toString()), 
- 
+ if(!k.toString().startsWith("n_")){
         dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),       
+ }
+ else if(k.toString().startsWith("n_")){
+   cardWedgit.add(TextClass(name: k,list:textValue.toList()))
 
+ }
    // ptovider level
    });
 
@@ -234,6 +245,7 @@ void  getCategory() async {
       void initState() {
      
         getCategory();
+        // TextClass(name: name);
     
         super.initState();
       }
@@ -250,16 +262,35 @@ void  getCategory() async {
                    mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                        children: <Widget>[
-                              Container(
-                                
+                                     Container(
                                child:Column(  
+
                                 children:dropDownsWedgit,
                                 )
                            ),
-                           Container(
-                              child:Column( 
-                             children: textWedgit,)
+                          //   Card(      
+                          //    elevation: 1.0,
+                          //     child:Column( 
+                          //       children: <Widget>[
+                          //            Container(
+                          //      child:
+                          //      Text(
+                          //        name.toString(),
+                          //        textAlign: TextAlign.center,
+                          //      )
+                          //  ),
+                                     Container(
+                               child:Column(  
+                                children:textWedgit,
+                                )
                            ),
+                         
+
+                          //  ]
+                          //  )
+                          //  ),
+                              
+                              
                               Container(
                                  padding: EdgeInsets.only(left: 20,right: 20,bottom:30),
                                child: Material(
@@ -334,7 +365,7 @@ class DropDownClass extends StatefulWidget{
      @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
      ,@required this.irrigationMethod,
     @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
-     :assert(name!=null), super(key: key);
+     :assert(name!=null||number!=null), super(key: key);
      final String name;
       final List serviceProvider;
         final List farmArea;
@@ -343,7 +374,7 @@ class DropDownClass extends StatefulWidget{
         final List irrigationSource;
         final List powerSource;
        final List  workType;
-  final Text number;
+  final String number;
   final List list;
   final Text text;
  final String id;
@@ -360,7 +391,7 @@ class DropDownClass extends StatefulWidget{
 
 
          final String name;
-         final Text number;
+         final String number;
          List _serviceProvider;
          List _farmArea;
          List _numberFarmAnimals;
@@ -379,6 +410,7 @@ class DropDownClass extends StatefulWidget{
   
    void initState() {
       super.initState();
+      TextClass(name:name);
  
   
   
@@ -505,7 +537,7 @@ class TextClass extends StatefulWidget{
   
    void initState() {
       super.initState();
- 
+  
   
   
   }
@@ -529,27 +561,71 @@ class TextClass extends StatefulWidget{
     @override
     Widget build(BuildContext context) {
       
-     return Column(children: <Widget>[
  
-       new Container(
-              padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
+     return Column(children: <Widget>[
+                // Container(
+                //                child:
+                //                Text(
+                //                  name.toString(),
+                //                  textAlign: TextAlign.center,
+                //                )
+                //            ),
+      
+       Container(
+              padding: EdgeInsets.only(left: 40.0,right: 40.0,bottom: 10),
     child:TextFormField(
-      // hin:Text(name),
-    style: TextStyle(
+     style: TextStyle(
         color: Colors.black,fontWeight: FontWeight.w300,
     ),
   decoration: InputDecoration(
     labelText:(number.toString()),
     
   ),
-)
+  keyboardType: TextInputType.number
+   )
+    ),
 
-      // child: Text(name),
+    
+     ],
+     );
+     
+
+
+  //         return Column(children: <Widget>[
+  //      ListView.separated(
+  //        itemBuilder: (context, position) {
+           
+  //       return            new Container(
+  //             padding: EdgeInsets.only(left: 40.0,right: 40.0,bottom: 10),
+  //   child:TextFormField(
+  //    style: TextStyle(
+  //       color: Colors.black,fontWeight: FontWeight.w300,
+  //   ),
+  // decoration: InputDecoration(
+  //   labelText:(number.toString()),
+    
+  // ),
+  // keyboardType: TextInputType.number
+  //  )
+  //   )
+  //     ;
+         
+  //     },
+  //        separatorBuilder: (context, position) {
+  //       return      Container(
+  //                              child:
+  //                              Text(
+  //                                name.toString(),
+  //                                textAlign: TextAlign.center,
+  //                              )
+  //                          );
       
-
-    )
-     ],);
-
+  //     },
+  //      itemCount: 10,
+  //      )
+  //    ],
+  //    );
+     
     }
 
 
