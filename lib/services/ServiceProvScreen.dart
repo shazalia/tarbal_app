@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+
     
 class ServiceProvScreen extends StatefulWidget {
   //  final String name;
@@ -14,6 +16,9 @@ class ServiceProvScreen extends StatefulWidget {
 }
 
 class _ServiceProvScreenState extends State<ServiceProvScreen> {
+    final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+
  
     // List _items  = new List(0),_dets= new List(0),name= new List(0);
     int postStatus;
@@ -88,7 +93,8 @@ void  getCategory() async {
 
      },
      
-             textWedgit.add(new TextClass(name: k,number:v1.toString(),list:textValue.toList())),       
+             textWedgit.add(new TextClass(number: v1,list:textValue.toList())),       
+            //  textWedgit.add(new TextClass(number: v1.toString(),list:textValue.toList())),       
 
 }
     
@@ -110,10 +116,10 @@ void  getCategory() async {
  if(!k.toString().startsWith("n_")){
         dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),       
  }
- else if(k.toString().startsWith("n_")){
-   cardWedgit.add(TextClass(name: k,list:textValue.toList()))
+//  else if(k.toString().startsWith("n_")){
+//    textWedgit.add(TextClass(name: k,list:textValue.toList()))
 
- }
+//  }
    // ptovider level
    });
 
@@ -191,12 +197,15 @@ void  getCategory() async {
         return AlertDialog(
           title: Text(tiltle),
           content: SingleChildScrollView(
+
             child: ListBody(
+              
               children: <Widget>[
                 Text(contetn),
                 //Text("يرجى التأكد من ملأ كل الحقول او المستخدم موجود فعليا"),
               ],
             ),
+       
           ),
           actions: <Widget>[
             FlatButton(
@@ -252,45 +261,62 @@ void  getCategory() async {
           @override
       Widget build(BuildContext context) {
        return Scaffold(
+                 key: scaffoldKey,
           appBar: AppBar(
             title: Text('مزوِّدو الخدمة'),
               backgroundColor: Color(0xFF1F6E46),
           ),
            body:  Center (
             child :SingleChildScrollView(
+                      child: new Form(
+                          key: _formKey,
+
                 child: new Column(
                    mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
+
                        children: <Widget>[
+                         new GestureDetector(
+                           onTap: (){
+                       
+                                  scaffoldKey.currentState.showSnackBar(
+                                new SnackBar(duration: new Duration(seconds: 40), content:
+                                new Row(
+                                  children: <Widget>[
+                                    new CircularProgressIndicator(),
+                                    new Text("   جاري جلب التفاصيل ...     ")
+                                  ],
+                                ),
+                                ),
+                              );
+                           },
+                              child: new Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                            children : <Widget>[
                                      Container(
                                child:Column(  
-
                                 children:dropDownsWedgit,
                                 )
                            ),
-                          //   Card(      
-                          //    elevation: 1.0,
-                          //     child:Column( 
-                          //       children: <Widget>[
-                          //            Container(
-                          //      child:
-                          //      Text(
-                          //        name.toString(),
-                          //        textAlign: TextAlign.center,
-                          //      )
-                          //  ),
+                               Container(
+                               child:
+                               Text(
+                                 " حدد أعداد/أحجام ,موجودات المزرعة ادناه",
+                                 textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0)
+                               )
+                           ),
                                      Container(
                                child:Column(  
                                 children:textWedgit,
                                 )
                            ),
-                         
-
-                          //  ]
-                          //  )
-                          //  ),
-                              
-                              
                               Container(
                                  padding: EdgeInsets.only(left: 20,right: 20,bottom:30),
                                child: Material(
@@ -333,17 +359,18 @@ void  getCategory() async {
                                 ),
                       
                            ),
-                     
+                              ]
+                               )
                  
-                     ],
+                         )],
+                         )
 
                 )
-			 
+            )
             ),
        
-        ),
-       );
-      }
+        );
+       }
     
      
       postCategory(String clientId,List  serviceProvider,List farmArea,
@@ -437,10 +464,16 @@ class DropDownClass extends StatefulWidget{
       
      return Column(children: <Widget>[
        new Container(
-             padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
-       child: DropdownButtonHideUnderline(
+              padding: EdgeInsets.all(20.0),
+      //  child: DropdownButtonHideUnderline(
         child: DropdownButton(
-       hint: Text(name), // Not necessary for Option 1
+                  elevation: 2,
+                  style: TextStyle(color:Colors.amber , fontSize: 18),
+        isDense: true,
+        iconSize: 20.0,
+          disabledHint: Text("يجب اختيار خيار من بين الخيارات."),
+       hint: Text(name), 
+       // Not necessary for Option 1
                          items: list.map((location) {
                           return DropdownMenuItem(
                              child: new Text(location,
@@ -456,7 +489,7 @@ class DropDownClass extends StatefulWidget{
                                         },                   // onChanged: changedDropDownItemSub,
 
         ),
-      ),
+      // ),
   
   ),
 //        new Container(
@@ -561,18 +594,35 @@ class TextClass extends StatefulWidget{
     @override
     Widget build(BuildContext context) {
       
- 
+    //       return Column(children: <Widget>[
+    //       Container(
+    //       child:ListView.builder(
+    //   itemBuilder: (context, i) => new StickyHeader(
+    //       header: new Container(
+    //         height: 50.0,
+    //         color: Colors.blueGrey[700],
+    //         padding: new EdgeInsets.symmetric(horizontal: 16.0),
+    //         child: new Text( name.toString(),
+    //         textAlign: TextAlign.center),
+    //        ),
+    //       content: new Container(   
+    //         // padding: const EdgeInsets.only(top: 8.0),
+    //         child: new Column(
+    //             children: list
+    //                 .map((val) => new ListTile(
+    //                       title: new Text(number),
+    //                     ))
+    //                 .toList()),
+    //       )),
+    // ))
+    //       ]);
+
      return Column(children: <Widget>[
-                // Container(
-                //                child:
-                //                Text(
-                //                  name.toString(),
-                //                  textAlign: TextAlign.center,
-                //                )
-                //            ),
+            
       
        Container(
               padding: EdgeInsets.only(left: 40.0,right: 40.0,bottom: 10),
+ 
     child:TextFormField(
      style: TextStyle(
         color: Colors.black,fontWeight: FontWeight.w300,
@@ -588,44 +638,7 @@ class TextClass extends StatefulWidget{
     
      ],
      );
-     
-
-
-  //         return Column(children: <Widget>[
-  //      ListView.separated(
-  //        itemBuilder: (context, position) {
-           
-  //       return            new Container(
-  //             padding: EdgeInsets.only(left: 40.0,right: 40.0,bottom: 10),
-  //   child:TextFormField(
-  //    style: TextStyle(
-  //       color: Colors.black,fontWeight: FontWeight.w300,
-  //   ),
-  // decoration: InputDecoration(
-  //   labelText:(number.toString()),
-    
-  // ),
-  // keyboardType: TextInputType.number
-  //  )
-  //   )
-  //     ;
-         
-  //     },
-  //        separatorBuilder: (context, position) {
-  //       return      Container(
-  //                              child:
-  //                              Text(
-  //                                name.toString(),
-  //                                textAlign: TextAlign.center,
-  //                              )
-  //                          );
-      
-  //     },
-  //      itemCount: 10,
-  //      )
-  //    ],
-  //    );
-     
+   
     }
 
 

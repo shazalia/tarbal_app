@@ -4,6 +4,7 @@ import 'package:tarbalcom/services/ServiceProvScreen.dart';
 import 'package:tarbalcom/services/AgriInputsScreen.dart';
 import 'package:tarbalcom/services/servicFarm.dart';
 import 'login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +26,9 @@ class _HomeScreenState extends State<HomeScreen>{
   int check = 0,isCount = 0;
   int postStatus;
   List<String> userList;
+  int index;
   List<DropdownMenuItem<String>> _dropCatsSub;
-  List _items = new List(0),_cats = new List(0) ,_units= new List(0);
+  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
   var map;
   void onSubmit(int unit, int count,String service) {
 
@@ -67,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen>{
   }
   Future<String> getDetails(String id) async {
     final response = await http.get(
-      "http://turbalkom.falsudan.com/api/service_categories",
+      "http://www.amock.io/api/shazawdidi/api/service_categories",
       headers: {
         "Accept": "application/json"
       },
@@ -202,8 +204,14 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
                   Expanded(
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
+                    child: GridView.builder(
+                       padding: EdgeInsets.all(8.0),
+                        gridDelegate:
+                        new SliverGridDelegateWithFixedCrossAxisCount(
+                                   crossAxisCount: 2,
+           crossAxisSpacing: 8.0,
+         mainAxisSpacing: 5.0,),
+                        // scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         physics: const ClampingScrollPhysics(),
                         itemCount: _items.length,
@@ -214,6 +222,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
                           return new GestureDetector(
                             onTap: (){
+                              
                               scaffoldKey.currentState.showSnackBar(
                                 new SnackBar(duration: new Duration(seconds: 40), content:
                                 new Row(
@@ -226,118 +235,53 @@ class _HomeScreenState extends State<HomeScreen>{
                               );
 
 
-                              getDetails(_items[index]["id"].toString()).whenComplete(() {
-                                if(_items[index]["id"]==2){
+                           getDetails(_items[index]["id"].toString()).whenComplete(() {
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
-                                  _modalBottomSheetMenu(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
                                 });
-                                }
-                                else if(_items[index]["id"]==1){
-                                  setState(() {
-                                    scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu2(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
-                                  });
-
-                                }
-                                else if(_items[index]["id"]==3){
-                                  setState(() {
-                                    scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu3(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
-                                  });
-
-                                }
-                                else if(_items[index]["id"]==5){
-                                  setState(() {
-                                    scaffoldKey.currentState.hideCurrentSnackBar();
-                                    _modalBottomSheetMenu4(_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
-                                  });
-
-                                }
 
                               });
-
-
 
                             },
                             child: Container(
                                 height: 150.0,
                                 width: screenWidth,
                                 padding: EdgeInsets.only(
-                                    top: 15.0,
+                                    top: 5.0,
                                     bottom: 5.0,
-                                    left: 25.0,
-                                    right: 25.0),
+                                    left: 10.0,
+                                    right: 10.0),
                                 child: Material(
                                     color: Color(0xFFFFFFFF),
                                     animationDuration: Duration(milliseconds: 500),
-                                    elevation: 2.0,
+                                    elevation: 5.0,
                                     borderRadius:
                                     BorderRadius.all(Radius.circular(15.0)),
-                                    child: Row(
+                                    child: new Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                       mainAxisSize: MainAxisSize.min,
+                                   verticalDirection: VerticalDirection.down,
                                       children: <Widget>[
-
-                                        Expanded(
-                                          flex: 2,
-                                          child: Column(
-                                            children: <Widget>[
-                                              SizedBox(height: 10,),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    Column(
-
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          _items[index]["name"],
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                                        ),
-
-                                                      ],
-                                                    ),
-
-                                                  ],
-                                                ),
-                                              ),
-
-
-                                              SizedBox(height: 10,)
-
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            decoration: new BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.all(Radius.circular(15.0)),
-                                            ),
-                                            child: CircleAvatar(
-                                              backgroundColor: Colors.grey.shade300,
-                                              radius: 40.0,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(15),
-                                                child: CachedNetworkImage(
+                              new CachedNetworkImage(
                                                   fit: BoxFit.cover,
                                                   placeholder: Image.asset('assets/user.png'),
                                                   imageUrl: _items[index]["image"],
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-
-                                      ],
-                                    )
+                                     new Center(
+                                          child: new Text(
+                                                          _items[index]["name"],
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 15),
+                                                        ),
+              )
+            ]
+ 
                                 )
+								)
                             ),
                           );
+                        
                         }
                     ),
                   ),
@@ -518,20 +462,10 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 
 
-  void _modalBottomSheetMenu(String name, String desc,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
+  void _modalBottomSheetMenu(List _details,String name, String desc,String id){
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-
-
     scaffoldKey.currentState.showBottomSheet((context){
       return new Container(
         //color: Color(0xFFEEEEEE),
@@ -550,50 +484,33 @@ class _HomeScreenState extends State<HomeScreen>{
         child: new Column(
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
+                padding: EdgeInsets.only(left: 10.0,right: 40.0, top: 10.0),
                 child: Row(
+
                   children: <Widget>[
                     IconButton(
                       icon: Icon(
                         Icons.close,
                         size: 20,
                         color: Colors.black54,
+
                       ),
                       onPressed: (){
                         Navigator.pop(context);
                       },
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      // child: Image.network(
-                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
-                      //      width: 250,
-                      //     height: 150,
-                      //     fit:BoxFit.fill
-
-                      // ),
-                    ),
-
 
                   ],
                 )
-
             ),
             Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
+                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
                 child: Column(
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-
-
                         Expanded(
                             flex: 2,
                             child: Row(
@@ -610,162 +527,12 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
+                                       if(id==1.toString()){  
                                       Navigator.pushReplacement(context,
                                       new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
-
+                                       }
                                     },
-                                    child: Text('اطلب الان', style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
-
-                      ],
-
-                    ),
-                    SizedBox(height: 10,),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
-
-                      ],
-
-                    ),
-                  ],
-                )
-            ),
-
-
- 
-
-          ],
-        ),
-
-      );
-
-
-    });
-
-
-  }
-  void _modalBottomSheetMenu2(String name, String desc,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
-
-    double screenheught = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-
-
-    scaffoldKey.currentState.showBottomSheet((context){
-      return new Container(
-        //color: Color(0xFFEEEEEE),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-            ],
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-          ),
-        ),
-
-        child: new Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.black54,
-                      ),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      // child: Image.network(
-                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
-                      //      width: 250,
-                      //     height: 150,
-                      //     fit:BoxFit.fill
-
-                      // ),
-                    ),
-
-
-                  ],
-                )
-
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-
-
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Material(
-                                  color: Color(0xFF1F6E46),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
-                                  elevation: 5.0,
-                                  child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
-                                    minWidth: 20,
-                                    onPressed: () {
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-
-                                    },
-                                    child: Text(' اطلب الان', style: TextStyle(color: Colors.white)),
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                               ],
@@ -809,310 +576,57 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-         
+            // Expanded(
+            //     child:ListView.builder(
+            //         scrollDirection: Axis.vertical,
+            //         shrinkWrap: true,
+            //         physics: const ClampingScrollPhysics(),
+            //         itemCount: _details.length,
+            //         // itemExtent: 10.0,
+            //         //reverse: true, //makes the list appear in descending order
+            //         itemBuilder: (BuildContext context, int index) {
+            //           return new Container(
+            //             child: Column(
+            //               children: <Widget>[
+            //                 index !=0?Container(
+            //                   margin: EdgeInsets.only(left: 20,right: 20),
+            //                   height: 1,
+            //                   color: Color(0x331F6E46),
+            //                 ):Container(),
+            //                 Container(
+            //                   padding: EdgeInsets.all(20),
+            //                   child: Row(
+            //                     mainAxisAlignment: MainAxisAlignment.end,
+            //                     children: <Widget>[
+            //                       Text(
+            //                         _details[index]["value"],
+            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+            //                       ),
 
-          ],
-        ),
+            //                       Text(
+            //                         "   :   ",
+            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+            //                       ),
 
-      );
-
-
-    });
-
-
-  }
-  void _modalBottomSheetMenu3(String name, String desc,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
-
-    double screenheught = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-
-
-    scaffoldKey.currentState.showBottomSheet((context){
-      return new Container(
-        //color: Color(0xFFEEEEEE),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-            ],
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-          ),
-        ),
-
-        child: new Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.black54,
-                      ),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      // child: Image.network(
-                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
-                      //      width: 250,
-                      //     height: 150,
-                      //     fit:BoxFit.fill
-
-                      // ),
-                    ),
+            //                       Text(
+            //                         _details[index]["label"],
+            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
+            //                       ),
 
 
-                  ],
-                )
+            //                     ],
 
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
+            //                   ),
+            //                 ),
 
 
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Material(
-                                  color: Color(0xFF1F6E46),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
-                                  elevation: 5.0,
-                                  child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
-                                    minWidth: 20,
-                                    onPressed: () {
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
+            //               ],
+            //             ),
+            //           );
+            //         }
+            //     )
 
-                                    },
-                                    child: Text('اطلب الان', style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
-
-                      ],
-
-                    ),
-                    SizedBox(height: 10,),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
-
-                      ],
-
-                    ),
-                  ],
-                )
-            ),
-
-
-
-       
-
-          ],
-        ),
-
-      );
-
-
-    });
-
-
-  }
-  void _modalBottomSheetMenu4(String name, String desc,String id){
-    String _currentCatSub,_id;
-    String cValue = "all";
-    bool isBezin = false;
-    bool isDesiel = false;
-    List _uints;
-    List _values;
-    int unit_id;
-
-    double screenheught = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
-
-
-    scaffoldKey.currentState.showBottomSheet((context){
-      return new Container(
-        //color: Color(0xFFEEEEEE),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-              Color(0x111F6E46),
-            ],
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-          ),
-        ),
-
-        child: new Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(left: 10.0,right: 10.0, top: 20.0),
-                child: Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.black54,
-                      ),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8.0),
-                        topRight: Radius.circular(8.0),
-                        bottomLeft: Radius.circular(8.0),
-                        bottomRight: Radius.circular(8.0),
-                      ),
-                      // child: Image.network(
-                      //     'https://wallpapercave.com/wp/wp2916561.jpg',
-                      //      width: 250,
-                      //     height: 150,
-                      //     fit:BoxFit.fill
-
-                      // ),
-                    ),
-
-
-                  ],
-                )
-
-            ),
-            Container(
-                padding: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 30),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-
-
-                        Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Material(
-                                  color: Color(0xFF1F6E46),
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
-                                  elevation: 5.0,
-                                  child: MaterialButton(
-                                    //minWidth: 200.0,
-                                    height: 30.0,
-                                    minWidth: 20,
-                                    onPressed: () {
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
-
-                                    },
-                                    child: Text(' اطلب الان', style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
-
-                        Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  name,
-                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                ),
-                              ],
-                            )
-                        ),
-
-                      ],
-
-                    ),
-                    SizedBox(height: 10,),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          desc,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
-                        ),
-
-                      ],
-
-                    ),
-                  ],
-                )
-            ),
-
-
- 
+            // ),
 
           ],
         ),
@@ -1197,9 +711,10 @@ typedef void MyFormCallback(int unit,int count,String id);
 // ignore: must_be_immutable
 class MyForm extends StatefulWidget {
   final MyFormCallback onSubmit;
-   String id;
+  List units;
+  String id;
 
-  MyForm({this.onSubmit,this.id});
+  MyForm({this.onSubmit,this.id,this.units});
 
   @override
   _MyFormState createState() => new _MyFormState();

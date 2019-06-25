@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<String> getItems() async {
     var response = await http.get(
-      Uri.encodeFull("http://turbalkom.falsudan.com/api/service_categories"),
+      Uri.encodeFull("http://www.amock.io/api/shazawdidi/api/service_categories"),
     );
 
 
@@ -61,22 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print('Response status: ${response.statusCode}');
   }
 
-//  Future<String> getCats() async {
-//    var response = await http.get(
-//      Uri.encodeFull("http://turbalkom.falsudan.com/api/service_categories"),
-//    );
-//
-//    if (response.body.toString() == "") {
-//      check = 1;
-//    } else {
-//      _cats = json.decode(response.body)["data"];
-//      print("Splash screen get is :" + _cats.toString());
-//
-//    }
-//
-//    print("Splash screen get is :" + response.body);
-//    print('Response status: ${response.statusCode}');
-//  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
           if (check == 0) {
             _onSplashEnd();
 
-//            getCats().whenComplete(() {
-//              if (check == 0) {
-//                _onSplashEnd();
-//              }
-//            }
-//
-//            );
+
           }
         });
       }else{
