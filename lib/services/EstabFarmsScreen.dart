@@ -6,17 +6,17 @@ import 'package:http/http.dart' as http;
  import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tarbalcom/pages/login.dart';
 
-class servicFarmScreen extends StatefulWidget {
+class EstabFarmsScreen extends StatefulWidget {
   final List items;
   final List cats;
 
-  servicFarmScreen({Key key, this.items,this.cats}) : super(key: key);
+  EstabFarmsScreen({Key key, this.items,this.cats}) : super(key: key);
 
   @override
-  _servicFarmScreenState createState() => new _servicFarmScreenState();
+  _estabFarmsScreenState createState() => new _estabFarmsScreenState();
 }
 
-class _servicFarmScreenState extends State<servicFarmScreen>{
+class _estabFarmsScreenState extends State<EstabFarmsScreen>{
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
 

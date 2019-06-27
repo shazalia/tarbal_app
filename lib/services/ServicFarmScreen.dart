@@ -1,40 +1,49 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:tarbalcom/services/ServiceProvScreen.dart';
-import 'package:tarbalcom/services/AgriInputsScreen.dart';
-import 'package:tarbalcom/services/ServicFarmScreen.dart';
-import 'package:tarbalcom/services/EstabFarmsScreen.dart';
-import 'login.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-//
-class HomeScreen extends StatefulWidget {
+ import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tarbalcom/pages/login.dart';
+
+class ServicFarmScreen extends StatefulWidget {
   final List items;
   final List cats;
 
-  HomeScreen({Key key, this.items,this.cats}) : super(key: key);
+  ServicFarmScreen({Key key, this.items,this.cats}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => new _HomeScreenState();
+  _servicFarmScreenState createState() => new _servicFarmScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _servicFarmScreenState extends State<ServicFarmScreen>{
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  List _filterList;
+
+  String _filter;
   int check = 0,isCount = 0;
+  List _serviceList;
   int postStatus;
   List<String> userList;
-  int index;
   List<DropdownMenuItem<String>> _dropCatsSub;
+
+
   List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
   var map;
+
   void onSubmit(int unit, int count,String service) {
 
- 
- 
+    _loading();
+    placeOrderDetailed(userList[0],service,count,unit).whenComplete(() {
+      if (postStatus == 200) {
+        Navigator.pop(context);
+        _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+
+      } else {
+        Navigator.pop(context);
+        _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+      }
+    });
 
     //print("type: "+result.toString()+"ben: "+ben.toString()+"desiel: "+des.toString());
 
@@ -43,19 +52,27 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     super.initState();
+
     _getUser();
+    _serviceList = widget.cats;
+
     if(widget.cats == null){
-      _filterList = new List(0);
+      _serviceList = new List(0);
     }else{
-      _filterList = widget.cats;
+      _serviceList = widget.cats;
+
     }
+
     if(widget.items == null){
       _items = new List(0);
     }else{
       _items = widget.items;
       print(_items.toString());
     }
-    _dropCatsSub = getDropCatsSub(_filterList);
+    //_filter = _filterList[0]["name"];
+    _dropCatsSub = getDropCatsSub(_serviceList);
+
+
   }
   _getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,40 +80,45 @@ class _HomeScreenState extends State<HomeScreen>{
       userList = prefs.getStringList("user");
     });
   }
+
   Future _deleteUser() async {
     List<String> user = new List(0);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('user', user);
   }
+
   Future<String> getDetails(String id) async {
-    final response = await http.get(
-      "http://www.amock.io/api/shazawdidi/api/service_categories",
+    final response = await http.post(
+      "http://turbalkom.falsudan.com/api/forms/service_providers",
       headers: {
         "Accept": "application/json"
       },
-
+      body: {
+        'service_id': id
+        //image': image,
+      },
     );
-
-    return "done";
-  }
-  Future<String> getSWData(String id) async {
-    final String url = "http://turbalkom.falsudan.com/api/forms/service_providers";
-    List data = List(); //edited line
-
-
-    var res = await http
-        .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
-
-    var resBody = json.decode(res.body);
-
     setState(() {
-      data = resBody;
+       if(json.decode(response.body)["data"]["service_providers_category"].toString().length >0){
+
+        setState(() {
+          isCount = 1;
+          map= json.decode(response.body)["data"]["service_providers_category"];
+          _units = List.from(map.values).toList();
+
+          if(_units.length >0){
+            isCount = 1;
+          }
+        });
+
+      }
+
     });
 
-    print(resBody);
-
-    return "success";
+    //List responseJson = json.decode(response.body)["data"];
+    return "done";
   }
+
   Future placeOrderDetailed(String phone,String pass,int count,int unit) async {
     final response = await http.post(
       "http://turbalkom.falsudan.com/api/add_order",
@@ -202,28 +224,53 @@ class _HomeScreenState extends State<HomeScreen>{
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 20,),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
 
+                        Padding(
+                            padding: EdgeInsets.only(left: 25.0),
+                            child: DropdownButton(
+                              hint: Text("- غير محدد -"),
+                              value: _filter,
+                              items: _dropCatsSub,
+                              onChanged: (value){
+                                setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  _filter = value;
+                                  _items = widget.items;
+                                  if(!value.toString().contains("الكل")){
+                                    _items = _items.where((i) =>  i["name"].toString().contains(value)).toList();
+                                  }
+                                }
+                                );
+                              },
+                            )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only( left: 10.0),
+                          child: Text(
+                            " : بحث حسب  ",
+                            style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                          ),
+                        ),
 
+                      ],
+                    ),
+                  ),
                   Expanded(
-                    child: GridView.builder(
-                       padding: EdgeInsets.all(8.0),
-                        gridDelegate:
-                        new SliverGridDelegateWithFixedCrossAxisCount(
-                                   crossAxisCount: 2,
-           crossAxisSpacing: 8.0,
-         mainAxisSpacing: 5.0,),
-                        // scrollDirection: Axis.vertical,
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         physics: const ClampingScrollPhysics(),
                         itemCount: _items.length,
-
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
                         itemBuilder: (BuildContext context, int index) {
 
                           return new GestureDetector(
                             onTap: (){
-                              
                               scaffoldKey.currentState.showSnackBar(
                                 new SnackBar(duration: new Duration(seconds: 40), content:
                                 new Row(
@@ -236,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen>{
                               );
 
 
-                           getDetails(_items[index]["id"].toString()).whenComplete(() {
+                              getDetails(_items[index]["id"].toString()).whenComplete(() {
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
                                   _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
@@ -249,40 +296,22 @@ class _HomeScreenState extends State<HomeScreen>{
                                 height: 150.0,
                                 width: screenWidth,
                                 padding: EdgeInsets.only(
-                                    top: 5.0,
+                                    top: 15.0,
                                     bottom: 5.0,
-                                    left: 10.0,
-                                    right: 10.0),
+                                    left: 25.0,
+                                    right: 25.0),
                                 child: Material(
                                     color: Color(0xFFFFFFFF),
                                     animationDuration: Duration(milliseconds: 500),
-                                    elevation: 5.0,
+                                    elevation: 2.0,
                                     borderRadius:
                                     BorderRadius.all(Radius.circular(15.0)),
-                                    child: new Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                       mainAxisSize: MainAxisSize.min,
-                                   verticalDirection: VerticalDirection.down,
-                                      children: <Widget>[
-                              new CachedNetworkImage(
-                                                  fit: BoxFit.cover,
-                                                  placeholder: Image.asset('assets/user.png'),
-                                                  imageUrl: _items[index]["image"],
-                                                ),
-                                     new Center(
-                                          child: new Text(
-                                                          _items[index]["name"],
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 15),
-                                                        ),
-              )
-            ]
- 
+                                    child: Row(
+                                 
+                                    )
                                 )
-								)
                             ),
                           );
-                        
                         }
                     ),
                   ),
@@ -528,74 +557,23 @@ class _HomeScreenState extends State<HomeScreen>{
                                     height: 30.0,
                                     minWidth: 20,
                                     onPressed: () {
-                                       if(id==1.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
-                                       }
-                                          if(id==2.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                           if(id==3.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                              if(id==4.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                                   if(id==5.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                                   if(id==6.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                                   if(id==4.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                                   if(id==7.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => AgriInputsScreen()));
-                                       }
-                                                      if(id==8.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
-                                       }
-                                                        if(id==9.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
-                                       }
-                                                        if(id==10.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
-                                       }
-                                                        if(id==11.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
-                                       }
-                                                        if(id==12.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => EstabFarmsScreen()));
-                                       }
-                                                            if(id==13.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServicFarmScreen()));
-                                       }
-                                                            if(id==14.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServicFarmScreen()));
-                                       }
-                                                            if(id==15.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServicFarmScreen()));
-                                       }
-                                                            if(id==16.toString()){  
-                                      Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (BuildContext context) => ServicFarmScreen()));
-                                       }
+                                      if(isCount == 1){
+                                        showDialog(
+                                            context: context, child: new MyForm(onSubmit: onSubmit,units: _units,id: id));
+                                      }else{
+                                        _loading();
+                                        placeOrder(userList[0],id).whenComplete(() {
+                                          if (postStatus == 200) {
+                                            Navigator.pop(context);
+                                            _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+
+                                          } else {
+                                            Navigator.pop(context);
+                                            _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+                                          }
+                                        });
+                                      }
+
                                     },
                                     child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
                                   ),
@@ -641,57 +619,57 @@ class _HomeScreenState extends State<HomeScreen>{
 
 
 
-            // Expanded(
-            //     child:ListView.builder(
-            //         scrollDirection: Axis.vertical,
-            //         shrinkWrap: true,
-            //         physics: const ClampingScrollPhysics(),
-            //         itemCount: _details.length,
-            //         // itemExtent: 10.0,
-            //         //reverse: true, //makes the list appear in descending order
-            //         itemBuilder: (BuildContext context, int index) {
-            //           return new Container(
-            //             child: Column(
-            //               children: <Widget>[
-            //                 index !=0?Container(
-            //                   margin: EdgeInsets.only(left: 20,right: 20),
-            //                   height: 1,
-            //                   color: Color(0x331F6E46),
-            //                 ):Container(),
-            //                 Container(
-            //                   padding: EdgeInsets.all(20),
-            //                   child: Row(
-            //                     mainAxisAlignment: MainAxisAlignment.end,
-            //                     children: <Widget>[
-            //                       Text(
-            //                         _details[index]["value"],
-            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-            //                       ),
+            Expanded(
+                child:ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: _details.length,
+                    // itemExtent: 10.0,
+                    //reverse: true, //makes the list appear in descending order
+                    itemBuilder: (BuildContext context, int index) {
+                      return new Container(
+                        child: Column(
+                          children: <Widget>[
+                            index !=0?Container(
+                              margin: EdgeInsets.only(left: 20,right: 20),
+                              height: 1,
+                              color: Color(0x331F6E46),
+                            ):Container(),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    _details[index]["value"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
 
-            //                       Text(
-            //                         "   :   ",
-            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
-            //                       ),
+                                  Text(
+                                    "   :   ",
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 14),
+                                  ),
 
-            //                       Text(
-            //                         _details[index]["label"],
-            //                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
-            //                       ),
-
-
-            //                     ],
-
-            //                   ),
-            //                 ),
+                                  Text(
+                                    _details[index]["label"],
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal,fontSize: 18),
+                                  ),
 
 
-            //               ],
-            //             ),
-            //           );
-            //         }
-            //     )
+                                ],
 
-            // ),
+                              ),
+                            ),
+
+
+                          ],
+                        ),
+                      );
+                    }
+                )
+
+            ),
 
           ],
         ),
@@ -779,7 +757,7 @@ class MyForm extends StatefulWidget {
   List units;
   String id;
 
-  MyForm({this.onSubmit,this.id,this.units});
+  MyForm({this.onSubmit,this.units,this.id});
 
   @override
   _MyFormState createState() => new _MyFormState();
@@ -797,7 +775,8 @@ class _MyFormState extends State<MyForm> {
   static final TextEditingController _name = new TextEditingController();
   @override
   void initState() {
-     _id = widget.id;
+    _values = widget.units;
+    _id = widget.id;
     _dropCatsSub = getDropCatsSub();
     _currentCatSub = _values[0];
   }
@@ -805,7 +784,14 @@ class _MyFormState extends State<MyForm> {
 
   List<DropdownMenuItem<String>> getDropCatsSub() {
     List<DropdownMenuItem<String>> items = new List();
-
+    for (int i = 0;i<_values.length;i++) {
+      String a ;
+      a = _values[i];
+      items.add(new DropdownMenuItem(value: a, child:  new SizedBox(
+          width: 200.0,
+          child: new Text(a)
+      ),));
+    }
     return items;
   }
 
@@ -858,7 +844,29 @@ class _MyFormState extends State<MyForm> {
               ),
             ),
 
+            /*new Padding(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
+              child: TextFormField(
+                controller: _region,
+                keyboardType: TextInputType.text,
+                autofocus: false,
+                decoration: InputDecoration(
+                  hintText: 'Address filter',
+                  contentPadding:
+                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32.0)),
+                ),
+                validator: (value) {
+                  final RegExp regex = new RegExp(
+                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                },
+              ),
+            ),*/
 
             Container(
               height: 1.0,
@@ -916,9 +924,6 @@ class _MyFormState extends State<MyForm> {
 }
 
 enum Answer { OK, CANCEL }
-
-
-
 
 
 

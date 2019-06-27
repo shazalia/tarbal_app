@@ -37,7 +37,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        Map <String, dynamic> dataParent;
        Map <String, dynamic> data;
        List<dynamic> provider;
-       List<String> dropdownValue = List();
+        List<String> dropdownValue = List();
        List<String> textValue = List();
        List<String> cardValue = List();
       //  List <dynamic> dropDownslist  = List();
@@ -48,17 +48,31 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
          
 
           List <String> temp  = new List();
+          String nameId;
 
 
       //  catDetailes _catDetailes;
        Map <String, dynamic> _catDetailes ;
        Map <String, dynamic> _catType ;
+       var isLoading = false;
+
 
   _ServiceProvScreenState();
 
 
-
+  @override
+      void initState() {
+     
+        getCategory();
+        // placeOrder();
+        // TextClass(name: name);
+    
+        super.initState();
+      }
   _getUser() async {
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userList = prefs.getStringList("user");
@@ -69,6 +83,9 @@ void  getCategory() async {
     var res = await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
     var resBody = json.decode(res.body)["data"];
+   
+  
+  
     data=resBody;
 
     print(data.toString());
@@ -82,19 +99,19 @@ void  getCategory() async {
  print(v),
      _catDetailes=v,
    _catDetailes.forEach((k1,v1)=>{ 
+     nameId=v1.toString(),
     // cat details level
      if(k1==("name")){   
              if(!k.toString().startsWith("n_")){
                 // print(k), 
-              dropdownValue.add(v1.toString()),
-             } else   if(!k.toString().startsWith("n_")){
-                textValue=v1,
-               textValue.add(v1.toString()),
+              dropdownValue.add(nameId),
+             } else   if(k.toString().startsWith("n_")){
+                // textValue=v1,
+               textValue.add(nameId),
 
      },
      
-             textWedgit.add(new TextClass(number: v1,list:textValue.toList())),       
-            //  textWedgit.add(new TextClass(number: v1.toString(),list:textValue.toList())),       
+             textWedgit.add(new TextClass(number: v1.toString(),list:textValue)),       
 
 }
     
@@ -124,11 +141,12 @@ void  getCategory() async {
    });
 
    
-      setState(() {
-     });
+     
 
     //print(resBody);
-
+       setState(() {
+        isLoading = false;
+      });
   }
   
  
@@ -250,16 +268,10 @@ void  getCategory() async {
       }
     
      
-      @override
-      void initState() {
-     
-        getCategory();
-        // TextClass(name: name);
     
-        super.initState();
-      }
           @override
       Widget build(BuildContext context) {
+     
        return Scaffold(
                  key: scaffoldKey,
           appBar: AppBar(
@@ -276,21 +288,12 @@ void  getCategory() async {
                   crossAxisAlignment: CrossAxisAlignment.center,
 
                        children: <Widget>[
-                         new GestureDetector(
-                           onTap: (){
-                       
-                                  scaffoldKey.currentState.showSnackBar(
-                                new SnackBar(duration: new Duration(seconds: 40), content:
-                                new Row(
-                                  children: <Widget>[
-                                    new CircularProgressIndicator(),
-                                    new Text("   جاري جلب التفاصيل ...     ")
-                                  ],
-                                ),
-                                ),
-                              );
-                           },
-                              child: new Column(
+                         isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              ):
+                        
+                               new Column(
                    mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
 
@@ -318,7 +321,7 @@ void  getCategory() async {
                                 )
                            ),
                               Container(
-                                 padding: EdgeInsets.only(left: 20,right: 20,bottom:30),
+                                 padding: EdgeInsets.only(left: 20,right: 20,bottom:30,top:30),
                                child: Material(
                                   color: Color(0xFF1F6E46),
                                   borderRadius: BorderRadius.circular(30.0),
@@ -362,7 +365,8 @@ void  getCategory() async {
                               ]
                                )
                  
-                         )],
+                        //  )
+                         ],
                          )
 
                 )
@@ -370,6 +374,8 @@ void  getCategory() async {
             ),
        
         );
+       
+       
        }
     
      
@@ -593,29 +599,7 @@ class TextClass extends StatefulWidget{
 
     @override
     Widget build(BuildContext context) {
-      
-    //       return Column(children: <Widget>[
-    //       Container(
-    //       child:ListView.builder(
-    //   itemBuilder: (context, i) => new StickyHeader(
-    //       header: new Container(
-    //         height: 50.0,
-    //         color: Colors.blueGrey[700],
-    //         padding: new EdgeInsets.symmetric(horizontal: 16.0),
-    //         child: new Text( name.toString(),
-    //         textAlign: TextAlign.center),
-    //        ),
-    //       content: new Container(   
-    //         // padding: const EdgeInsets.only(top: 8.0),
-    //         child: new Column(
-    //             children: list
-    //                 .map((val) => new ListTile(
-    //                       title: new Text(number),
-    //                     ))
-    //                 .toList()),
-    //       )),
-    // ))
-    //       ]);
+     
 
      return Column(children: <Widget>[
             
@@ -641,7 +625,29 @@ class TextClass extends StatefulWidget{
    
     }
 
-
+ 
+    //       return Column(children: <Widget>[
+    //       Container(
+    //       child:ListView.builder(
+    //   itemBuilder: (context, i) => new StickyHeader(
+    //       header: new Container(
+    //         height: 50.0,
+    //         color: Colors.blueGrey[700],
+    //         padding: new EdgeInsets.symmetric(horizontal: 16.0),
+    //         child: new Text( name.toString(),
+    //         textAlign: TextAlign.center),
+    //        ),
+    //       content: new Container(   
+    //         // padding: const EdgeInsets.only(top: 8.0),
+    //         child: new Column(
+    //             children: list
+    //                 .map((val) => new ListTile(
+    //                       title: new Text(number),
+    //                     ))
+    //                 .toList()),
+    //       )),
+    // ))
+    //       ]);
 }
 
 
