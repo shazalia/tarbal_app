@@ -166,11 +166,11 @@ class _HomeScreenState extends State<HomeScreen>{
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        body: NestedScrollView(
-     headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {    
-        return <Widget>[
-          //  key: scaffoldKey,
-        SliverAppBar(
+        // body: NestedScrollView(
+    //  headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {    
+        // return <Widget>[
+           key: scaffoldKey,
+       appBar: AppBar(
           elevation: 3,
           backgroundColor: Colors.lightGreen[50],
           centerTitle: true,
@@ -199,8 +199,8 @@ class _HomeScreenState extends State<HomeScreen>{
           ],
 
         ),
-           ];
-     },
+          //  ];
+    //  },
         
          body:Container(
            padding: EdgeInsets.only(
@@ -208,19 +208,18 @@ class _HomeScreenState extends State<HomeScreen>{
                                     bottom: 5.0,
                                     left: 20.0,
                                     right: 30.0),
-            color: Color(0x111F6E46),
+            color: Colors.lightGreen[30],
             child: Center(
 
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 20,),
-
-                  
+                  SizedBox(height: 10,),
+  
                  Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,  
-                        // physics: const ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         itemCount: _items.length,
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
@@ -250,19 +249,19 @@ class _HomeScreenState extends State<HomeScreen>{
 
                             },
                             child: Container(
-                                height: 50.0,
+                                height: 150.0,
                                 width: screenWidth,
                                 padding: EdgeInsets.only(
-                                    top: 20.0,
-                                    bottom: 350.0,
-                                    left: 10.0,
-                                    right: 30.0),
+                                    top: 15.0,
+                                    bottom: 5.0,
+                                    left: 5.0,
+                                    right: 25.0),
                                 child: Material(
                                     color: Colors.lightGreen[50],
                                     animationDuration: Duration(milliseconds: 500),
                                     elevation: 2.0,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(20.0)),
                                     child: Row(
                                       children: <Widget>[
 
@@ -289,19 +288,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
                                                       ],
                                                     ),
-
-                                                  ],
-                                                ),
-                                              ),
- 
-                                              SizedBox(height: 10,)
-
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
+                                                          Container(
                                             decoration: new BoxDecoration(
                                               borderRadius:
                                               BorderRadius.all(Radius.circular(15.0)),
@@ -319,7 +306,21 @@ class _HomeScreenState extends State<HomeScreen>{
                                               ),
                                             ),
                                           ),
+                                       
+                                                  ],
+                                                ),
+                                              ),
+ 
+                                              SizedBox(height: 10,)
+
+                                            ],
+                                          ),
                                         ),
+                                        // Expanded(
+                                        //   flex: 1,
+                                     
+                                       
+                                        // ),
 
                                       ],
                                     )
@@ -337,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen>{
 
             )
         )
-     ),
+    //  ),
     );
   }
 

@@ -211,6 +211,7 @@ class DropDownClass extends StatefulWidget{
       final String name;
          final String number;
             final List list;
+            String _selection;
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +236,10 @@ class DropDownClass extends StatefulWidget{
                                             ),
                                             value: location,
                                           );
-                                        }).toList(), 
+                                        }).toList(), onChanged: (value) {
+                                          _selection=value;
+                                        }, 
+                                        
                                                      
 
         ),

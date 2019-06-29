@@ -49,6 +49,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
 
           List <String> temp  = new List();
           String nameId;
+          String _selection;
 
 
       //  catDetailes _catDetailes;
@@ -239,36 +240,6 @@ void  getCategory() async {
     );
   }
 
-       Future<void> _loading() async {
-        return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("جار المعالجه"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    new Row(
-                      children: <Widget>[
-                        new Container(
-                          padding: EdgeInsets.all(10),
-    
-                          child: new CircularProgressIndicator(),
-                        ),
-    
-                        new Text("جار انشاء الطلب ...")
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      }
-    
-     
     
           @override
       Widget build(BuildContext context) {
@@ -281,8 +252,7 @@ void  getCategory() async {
           ),
            body:  Center (
              child: Card(
-                            //  backgroundColor: Color(0xFF1F6E46),
-
+               color: Colors.lightGreen[30],
             child :SingleChildScrollView(
               
                       child: new Form(
@@ -443,6 +413,7 @@ class DropDownClass extends StatefulWidget{
  
    final List list;
    int serviceId;
+   String _selection;
   String _currentCatSub,id;
 
   _DropDownClass(this.name, this.list, this.number);
@@ -478,13 +449,14 @@ class DropDownClass extends StatefulWidget{
        new Container(
               padding: EdgeInsets.all(20.0),
       //  child: DropdownButtonHideUnderline(
-        child: DropdownButton(
+        child: new DropdownButton(
                   elevation: 2,
                   style: TextStyle(color:Colors.amber , fontSize: 18),
         isDense: true,
         iconSize: 20.0,
           disabledHint: Text("يجب اختيار خيار من بين الخيارات."),
        hint: Text(name), 
+       
        // Not necessary for Option 1
                          items: list.map((location) {
                           return DropdownMenuItem(
@@ -495,10 +467,19 @@ class DropDownClass extends StatefulWidget{
                                             letterSpacing: 0.5),
                                             ),
                                             value: location,
+                                            
                                           );
-                                        }).toList(), 
-                                        onChanged: (changedDropDownItemSub) {
-                                        },                   // onChanged: changedDropDownItemSub,
+                                          
+                                        }).toList(), onChanged: (newValue) {
+                                           setState(() {
+                                      _selection = newValue;
+                                    });
+
+                                  print (_selection);
+                                        }, 
+                                        
+                                        // onChanged: (changedDropDownItemSub) {
+                                        // },                   // onChanged: changedDropDownItemSub,
 
         ),
       // ),
@@ -572,17 +553,19 @@ class TextClass extends StatefulWidget{
          List _powerSource;
          List  _workType;
          List _values;
+ String _currentCatSub,_id;
+     static final TextEditingController _name = new TextEditingController();
 
- 
    final List list;
    int serviceId;
-  String _currentCatSub,id;
+  //  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
 
   _TextClass(this.name, this.list, this.number);
   
    void initState() {
       super.initState();
-  
+    _values = widget.list;
+    _id = widget.id;
   
   
   }
@@ -610,20 +593,31 @@ class TextClass extends StatefulWidget{
      return Column(children: <Widget>[
             
       
-       Container(
-              padding: EdgeInsets.only(left: 40.0,right: 40.0,bottom: 10),
- 
-    child:TextFormField(
-     style: TextStyle(
-        color: Colors.black,fontWeight: FontWeight.w300,
-    ),
-  decoration: InputDecoration(
-    labelText:(number.toString()),
-    
-  ),
-  keyboardType: TextInputType.number
-   )
-    ),
+       new Padding(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
+              child: TextFormField(
+                controller: _name,
+                keyboardType: TextInputType.number,
+                autofocus: false,
+                textAlign: TextAlign.right,
+                decoration: InputDecoration(
+                  hintText: number.toString(),
+                  contentPadding:
+                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                ),
+                validator: (value) {
+                  final RegExp regex = new RegExp(
+                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+                  if (value.isEmpty) {
+                    return 'الرجاء ملء الحقل';
+                  }
+                },
+              ),
+            ),
+
 
     
      ],
