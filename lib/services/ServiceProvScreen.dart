@@ -214,6 +214,7 @@ void  getCategory() async {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(tiltle),
+
           content: SingleChildScrollView(
 
             child: ListBody(
@@ -279,7 +280,11 @@ void  getCategory() async {
               backgroundColor: Color(0xFF1F6E46),
           ),
            body:  Center (
+             child: Card(
+                            //  backgroundColor: Color(0xFF1F6E46),
+
             child :SingleChildScrollView(
+              
                       child: new Form(
                           key: _formKey,
 
@@ -371,6 +376,7 @@ void  getCategory() async {
 
                 )
             )
+           )
             ),
        
         );

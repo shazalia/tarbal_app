@@ -166,15 +166,19 @@ class _HomeScreenState extends State<HomeScreen>{
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
+        body: NestedScrollView(
+     headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {    
+        return <Widget>[
+          //  key: scaffoldKey,
+        SliverAppBar(
           elevation: 3,
-          backgroundColor: Color(0xFF1F6E46),
+          backgroundColor: Colors.lightGreen[50],
           centerTitle: true,
           title: Text("تربالكم",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
+                  fontFamily: 'RobotoMono',
+                  color: Colors.lightGreen[900],
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold
               )),
 
@@ -182,20 +186,28 @@ class _HomeScreenState extends State<HomeScreen>{
 
             new IconButton(
               icon: new Icon(Icons.person),
-              color: Colors.white,
+              color: Colors.lightGreen[900],
               onPressed: (){
                 _wedd();
               },
             ),
             new IconButton(
               icon: new Icon(Icons.search),
-              color: Colors.white,
+              color: Colors.lightGreen[900],
               onPressed: (){},
             ),
           ],
 
         ),
-        body: Container(
+           ];
+     },
+        
+         body:Container(
+           padding: EdgeInsets.only(
+                                    top: 15.0,
+                                    bottom: 5.0,
+                                    left: 20.0,
+                                    right: 30.0),
             color: Color(0x111F6E46),
             child: Center(
 
@@ -203,27 +215,19 @@ class _HomeScreenState extends State<HomeScreen>{
                 children: <Widget>[
                   SizedBox(height: 20,),
 
-
-                  Expanded(
-                    child: GridView.builder(
-                       padding: EdgeInsets.all(8.0),
-                        gridDelegate:
-                        new SliverGridDelegateWithFixedCrossAxisCount(
-                                   crossAxisCount: 2,
-           crossAxisSpacing: 8.0,
-         mainAxisSpacing: 5.0,),
-                        // scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
+                  
+                 Expanded(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,  
+                        // physics: const ClampingScrollPhysics(),
                         itemCount: _items.length,
-
                         // itemExtent: 10.0,
                         //reverse: true, //makes the list appear in descending order
                         itemBuilder: (BuildContext context, int index) {
 
                           return new GestureDetector(
                             onTap: (){
-                              
                               scaffoldKey.currentState.showSnackBar(
                                 new SnackBar(duration: new Duration(seconds: 40), content:
                                 new Row(
@@ -236,62 +240,104 @@ class _HomeScreenState extends State<HomeScreen>{
                               );
 
 
-                           getDetails(_items[index]["id"].toString()).whenComplete(() {
+                              getDetails(_items[index]["id"].toString()).whenComplete(() {
                                 setState(() {
                                   scaffoldKey.currentState.hideCurrentSnackBar();
-                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString());
+                                  _modalBottomSheetMenu(_dets,_items[index]["name"],_items[index]["description"],_items[index]["id"].toString(),_items[index]["image"]);
                                 });
 
                               });
 
                             },
                             child: Container(
-                                height: 150.0,
+                                height: 50.0,
                                 width: screenWidth,
                                 padding: EdgeInsets.only(
-                                    top: 5.0,
-                                    bottom: 5.0,
+                                    top: 20.0,
+                                    bottom: 350.0,
                                     left: 10.0,
-                                    right: 10.0),
+                                    right: 30.0),
                                 child: Material(
-                                    color: Color(0xFFFFFFFF),
+                                    color: Colors.lightGreen[50],
                                     animationDuration: Duration(milliseconds: 500),
-                                    elevation: 5.0,
+                                    elevation: 2.0,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0)),
-                                    child: new Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                       mainAxisSize: MainAxisSize.min,
-                                   verticalDirection: VerticalDirection.down,
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                    child: Row(
                                       children: <Widget>[
-                              new CachedNetworkImage(
+
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            children: <Widget>[
+                                              SizedBox(height: 10,),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    Column(
+
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          _items[index]["name"],
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
+                                                        ),
+
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+ 
+                                              SizedBox(height: 10,)
+
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            decoration: new BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.all(Radius.circular(15.0)),
+                                            ),
+                                            child: CircleAvatar(
+                                              backgroundColor: Colors.lightGreen[50],
+                                              radius: 40.0,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: CachedNetworkImage(
                                                   fit: BoxFit.cover,
                                                   placeholder: Image.asset('assets/user.png'),
                                                   imageUrl: _items[index]["image"],
                                                 ),
-                                     new Center(
-                                          child: new Text(
-                                                          _items[index]["name"],
-                                                          textAlign: TextAlign.start,
-                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 15),
-                                                        ),
-              )
-            ]
- 
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                      ],
+                                    )
                                 )
-								)
                             ),
                           );
-                        
                         }
                     ),
                   ),
-
+                 
+                 
                 ],
               ),
 
+
             )
         )
+     ),
     );
   }
 
@@ -316,32 +362,21 @@ class _HomeScreenState extends State<HomeScreen>{
                   child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          Container(
-                            height: 3,
-                            color: Color(0x88AAAAAA),
-                            margin: EdgeInsets.only(left: 100,right: 100,top: 20),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-
-                      CircleAvatar(
-                        backgroundColor: Colors.grey.shade300,
-                        radius: 40.0,
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
+                      Card(
+                          margin: EdgeInsets.only(left: 40,right: 40),
+                    child: SizedBox(
+                           height: 10.0,
+                           width: 10.0,
                           child: CachedNetworkImage(
-                            fit: BoxFit.cover,
                             placeholder: Image.asset('assets/user.png'),
                             imageUrl: userList[4],
                           ),
-                        ),
+                        
                       ),
 
-                      SizedBox(height: 10),
-
+                     
+                      ),
+                       SizedBox(height: 10),
                       Text(userList[1],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
 
                       Expanded(
@@ -463,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 
 
-  void _modalBottomSheetMenu(List _details,String name, String desc,String id){
+  void _modalBottomSheetMenu(List _details,String name, String desc,String id,String img){
 
     double screenheught = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -493,7 +528,7 @@ class _HomeScreenState extends State<HomeScreen>{
                       icon: Icon(
                         Icons.close,
                         size: 20,
-                        color: Colors.black54,
+                        color: Colors.lightGreen[900],
 
                       ),
                       onPressed: (){
@@ -503,6 +538,15 @@ class _HomeScreenState extends State<HomeScreen>{
 
                   ],
                 )
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
+              child: CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  placeholder: Image.asset('assets/user.png'),
+                                                  imageUrl: img,
+                                                ),
+
             ),
             Container(
                 padding: EdgeInsets.only(left: 20,right: 20,bottom: 30),
@@ -521,7 +565,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                 Material(
                                   color: Color(0xFF1F6E46),
                                   borderRadius: BorderRadius.circular(30.0),
-                                  shadowColor: Colors.green,
+                                  shadowColor: Colors.lightGreen[900],
                                   elevation: 5.0,
                                   child: MaterialButton(
                                     //minWidth: 200.0,
@@ -597,7 +641,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                       new MaterialPageRoute(builder: (BuildContext context) => ServicFarmScreen()));
                                        }
                                     },
-                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white)),
+                                    child: Text('انشاء الطلب', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
                                   ),
                                 ),
                               ],
@@ -629,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen>{
                         Text(
                           desc,
                           textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal,fontSize: 14),
+                          style: TextStyle(color: Colors.lightGreen[900], fontWeight: FontWeight.normal,fontSize: 14),
                         ),
 
                       ],
@@ -638,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen>{
                   ],
                 )
             ),
-
+           
 
 
             // Expanded(
