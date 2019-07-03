@@ -240,6 +240,36 @@ void  getCategory() async {
     );
   }
 
+       Future<void> _loading() async {
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("جار المعالجه"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    new Row(
+                      children: <Widget>[
+                        new Container(
+                          padding: EdgeInsets.all(10),
+    
+                          child: new CircularProgressIndicator(),
+                        ),
+    
+                        new Text("جار انشاء الطلب ...")
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }
+    
+     
     
           @override
       Widget build(BuildContext context) {
@@ -553,19 +583,18 @@ class TextClass extends StatefulWidget{
          List _powerSource;
          List  _workType;
          List _values;
- String _currentCatSub,_id;
-     static final TextEditingController _name = new TextEditingController();
 
+ 
    final List list;
    int serviceId;
-  //  List _items = new List(0),_cats = new List(0),_dets= new List(0),_units= new List(0);
+  String _currentCatSub,id;
+    static final TextEditingController _name = new TextEditingController();
 
   _TextClass(this.name, this.list, this.number);
   
    void initState() {
       super.initState();
-    _values = widget.list;
-    _id = widget.id;
+  
   
   
   }
@@ -592,8 +621,8 @@ class TextClass extends StatefulWidget{
 
      return Column(children: <Widget>[
             
-      
-       new Padding(
+   
+  new Padding(
               padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
               child: TextFormField(
                 controller: _name,
@@ -601,24 +630,22 @@ class TextClass extends StatefulWidget{
                 autofocus: false,
                 textAlign: TextAlign.right,
                 decoration: InputDecoration(
-                  hintText: number.toString(),
+                  labelText:(number.toString()),
                   contentPadding:
                   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
+                      borderRadius: BorderRadius.circular(10.0)),
                 ),
                 validator: (value) {
                   final RegExp regex = new RegExp(
                       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
                   if (value.isEmpty) {
-                    return 'الرجاء ملء الحقل';
+                    return 'ال';
                   }
                 },
               ),
             ),
-
-
     
      ],
      );
