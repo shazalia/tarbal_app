@@ -172,12 +172,12 @@ class _HomeScreenState extends State<HomeScreen>{
            key: scaffoldKey,
        appBar: AppBar(
           elevation: 3,
-          backgroundColor: Colors.lightGreen[50],
+          backgroundColor: Colors.green[900],
           centerTitle: true,
           title: Text("تربالكم",
               style: TextStyle(
                   fontFamily: 'RobotoMono',
-                  color: Colors.lightGreen[900],
+                  color: Colors.green[50],
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
               )),
@@ -186,14 +186,14 @@ class _HomeScreenState extends State<HomeScreen>{
 
             new IconButton(
               icon: new Icon(Icons.person),
-              color: Colors.lightGreen[900],
+              color: Colors.green[50],
               onPressed: (){
                 _wedd();
               },
             ),
             new IconButton(
               icon: new Icon(Icons.search),
-              color: Colors.lightGreen[900],
+              color: Colors.green[50],
               onPressed: (){},
             ),
           ],
@@ -206,8 +206,8 @@ class _HomeScreenState extends State<HomeScreen>{
            padding: EdgeInsets.only(
                                     top: 15.0,
                                     bottom: 5.0,
-                                    left: 20.0,
-                                    right: 30.0),
+                                    left: 10.0,
+                                    right: 10.0),
             color: Colors.lightGreen[30],
             child: Center(
 
@@ -216,7 +216,10 @@ class _HomeScreenState extends State<HomeScreen>{
                   SizedBox(height: 10,),
   
                  Expanded(
-                    child: ListView.builder(
+                    child: GridView.builder(
+                       gridDelegate:
+      new SliverGridDelegateWithFixedCrossAxisCount(
+                                   crossAxisCount: 2),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,  
                         physics: const ClampingScrollPhysics(),
@@ -248,20 +251,20 @@ class _HomeScreenState extends State<HomeScreen>{
                               });
 
                             },
-                            child: Container(
+                              child: Container(
                                 height: 150.0,
                                 width: screenWidth,
-                                padding: EdgeInsets.only(
-                                    top: 15.0,
-                                    bottom: 5.0,
-                                    left: 5.0,
-                                    right: 25.0),
+                                // padding: EdgeInsets.only(
+                                //     top: 5.0,
+                                //     bottom: 5.0,
+                                //     left: 5.0,
+                                //     right: 5.0),
                                 child: Material(
-                                    color: Colors.lightGreen[50],
+                                    color: Color(0xFFFFFFFF),
                                     animationDuration: Duration(milliseconds: 500),
-                                    elevation: 2.0,
+                                    // elevation: 2.0,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
+                                    BorderRadius.all(Radius.circular(0.0)),
                                     child: Row(
                                       children: <Widget>[
 
@@ -270,32 +273,16 @@ class _HomeScreenState extends State<HomeScreen>{
                                           child: Column(
                                             children: <Widget>[
                                               SizedBox(height: 10,),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: <Widget>[
-                                                    Column(
-
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          _items[index]["name"],
-                                                          textAlign: TextAlign.center,
-                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
-                                                        ),
-
-                                                      ],
-                                                    ),
-                                                          Container(
+                                                  Expanded(
+                                          flex: 2,
+                                          child: Container(
                                             decoration: new BoxDecoration(
                                               borderRadius:
                                               BorderRadius.all(Radius.circular(15.0)),
                                             ),
                                             child: CircleAvatar(
-                                              backgroundColor: Colors.lightGreen[50],
-                                              radius: 40.0,
+                                              backgroundColor: Colors.white30,
+                                              radius: 50.0,
                                               child: Padding(
                                                 padding: EdgeInsets.all(15),
                                                 child: CachedNetworkImage(
@@ -306,22 +293,38 @@ class _HomeScreenState extends State<HomeScreen>{
                                               ),
                                             ),
                                           ),
-                                       
+                                        ),
+
+                                              Expanded(
+                                                flex: 1,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Column(
+
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          _items[index]["name"],
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 15),
+                                                        ),
+
+                                                      ],
+                                                    ),
+
                                                   ],
                                                 ),
                                               ),
  
+                                          
                                               SizedBox(height: 10,)
 
                                             ],
                                           ),
                                         ),
-                                        // Expanded(
-                                        //   flex: 1,
-                                     
-                                       
-                                        // ),
-
+                                    
                                       ],
                                     )
                                 )
@@ -574,7 +577,7 @@ class _HomeScreenState extends State<HomeScreen>{
                                     minWidth: 20,
                                     onPressed: () {
                                        if(id==1.toString()){  
-                                      Navigator.pushReplacement(context,
+                                      Navigator.push(context,
                                       new MaterialPageRoute(builder: (BuildContext context) => ServiceProvScreen()));
                                        }
                                           if(id==2.toString()){  

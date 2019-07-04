@@ -98,7 +98,8 @@ class _SplashScreenState extends State<SplashScreen> {
             child: new BackdropFilter(
               filter: new ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
               child: new Container(
-                decoration: new BoxDecoration(color: Colors.black.withOpacity(0.7)),
+                decoration: new BoxDecoration(color: Colors.green[50]),
+                // decoration: new BoxDecoration(color: Colors.black.withOpacity(0.7)),
               ),
             ),
           ),
@@ -126,10 +127,10 @@ class _SplashScreenState extends State<SplashScreen> {
                           padding: EdgeInsets.only(top: 10.0),
                         ),
                         Text(
-                          "Tarbalcom",
+                          "تربالكم",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
+                              color: Colors.green[900],
+                              fontSize: 30.0,
                               fontWeight: FontWeight.bold),
                         )
                       ],

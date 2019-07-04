@@ -22,6 +22,8 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
     int postStatus;
       int check = 0,isCount = 0;
      String clientId;
+ dynamic resultRawMap ;
+ List <dynamic> resultRawsList ;
  
       //  final String name;
  
@@ -130,7 +132,7 @@ void  getCategory() async {
         print ('New Provider List: '),
         print(dropdownValue.toString()), 
  if(!k.toString().startsWith("n_")){
-        dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValue.toList())),       
+        dropDownsWedgit.add(DropDownClass(name: k,list: dropdownValueid.toList())),       
  }
 //  else if(k.toString().startsWith("n_")){
 //    textWedgit.add(TextClass(name: k,list:textValue.toList()))
@@ -181,31 +183,7 @@ void  getCategory() async {
     }
   }
 
-
-      List _irrigationMethod = new List(0),_serviceProvider = new List(0),_farmArea= new List(0),_numberFarmAnimals= new List(0),
-       _irrigationSource = new List(0),_powerSource = new List(0),
-       _workType = new List(0);
-
-   void onSubmit(String clientId,List  serviceProvider,List farmArea,
-   List numberFarmAnimals,List irrigationMethod,List irrigationSource,
-    List powerSource,List workType) {
-
-    _loading();
-    postCategory(clientId,serviceProvider,farmArea,
-    numberFarmAnimals,irrigationMethod,irrigationSource
-    ,powerSource,workType).whenComplete(() {
-          if (postStatus == 200) {
-            Navigator.pop(context);
-            _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-    
-          } else {
-            Navigator.pop(context);
-            _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-          }
-        });
-    
-     
-      }
+ 
          Future<void> _alert(String tiltle,String contetn) async {
     return showDialog<void>(
       context: context,
@@ -275,11 +253,13 @@ void  getCategory() async {
        return Scaffold(
                  key: scaffoldKey,
           appBar: AppBar(
+            centerTitle: true,
             title: Text('مزوِّدو الخدمة'),
-              backgroundColor: Color(0xFF1F6E46),
+              backgroundColor: Colors.green[900],
           ),
            body:  Center (
              child: Card(
+               elevation: 5,
                color: Colors.lightGreen[30],
             child :SingleChildScrollView(
               
@@ -302,11 +282,14 @@ void  getCategory() async {
 
                             children : <Widget>[
                                      Container(
+                                       padding: EdgeInsets.only(left: 20,right: 20,bottom:30,top:30),
+                                       
                                child:Column(  
                                 children:dropDownsWedgit,
                                 )
                            ),
                                Container(
+                                   
                                child:
                                Text(
                                  " حدد أعداد/أحجام ,موجودات المزرعة ادناه",
@@ -337,18 +320,6 @@ void  getCategory() async {
                                     
                                       }else{
                                         _loading();
-                                        // placeOrder(clientId,serviceProvider,farmArea
-                                        // ,numberFarmAnimals,irrigationMethod,irrigationSource
-                                        // ,powerSource,workType).whenComplete(() {
-                                        //   if (postStatus == 200) {
-                                        //     Navigator.pop(context);
-                                        //     _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
-
-                                        //   } else {
-                                        //     Navigator.pop(context);
-                                        //     _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                        //   }
-                                        // });
                                       }
 
                                     },
@@ -373,31 +344,21 @@ void  getCategory() async {
        
        
        }
-    
-     
-      postCategory(String clientId,List  serviceProvider,List farmArea,
-   List numberFarmAnimals,List irrigationMethod,List irrigationSource,
-    List powerSource,List workType) {}
-
- 
-
-
 
 }
-typedef void MyFormCallback(String clientId,List  serviceProvider,List farmArea,
-   List numberFarmAnimals,List irrigationMethod,List irrigationSource,
-    List powerSource,List workType);
-class DropDownClass extends StatefulWidget{
-    final MyFormCallback onSubmit;
  
-    DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id,this.number, this.text})
+class DropDownClass extends StatefulWidget{
+  
+    DropDownClass({Key key,  @required this.name, @required this.list, this.id,this.number})
      :assert(name!=null||number!=null), super(key: key);
      final String name;
  
   final String number;
   final List list;
-  final Text text;
- final String id;
+  final String id;
+
+
+
  //  final Text name2;
   
   @override
@@ -410,25 +371,14 @@ class DropDownClass extends StatefulWidget{
 
 
 
-         final String name;
+          String name;
          final String number;
-  
-
- 
    final List list;
-   int serviceId;
-   String _selection;
-  String _currentCatSub,id;
+  
 
   _DropDownClass(this.name, this.list, this.number);
   
-   void initState() {
-      super.initState();
-      TextClass(name:name);
- 
-  
-  
-  }
+   
  
 
     @override
@@ -438,60 +388,37 @@ class DropDownClass extends StatefulWidget{
        new Container(
               padding: EdgeInsets.all(20.0),
       //  child: DropdownButtonHideUnderline(
+        
         child: new DropdownButton(
-                  elevation: 2,
+           elevation: 2,
                   style: TextStyle(color:Colors.amber , fontSize: 18),
         isDense: true,
         iconSize: 20.0,
-          disabledHint: Text("يجب اختيار خيار من بين الخيارات."),
-       hint: Text(name), 
-       
-       // Not necessary for Option 1
+             hint: Text(name.toString()), 
                          items: list.map((location) {
                           return DropdownMenuItem(
-                             child: new Text(location,
+                            
+                             child: new Text(location['name'].toString(),
                                              style: TextStyle(
                                             color: Color(0xFF880E4F),
-                                            fontSize: 8.0,
+                                            fontSize: 10,
                                             letterSpacing: 0.5),
                                             ),
-                                            value: location,
+                                            value: location.toString(),
                                             
                                           );
                                           
                                         }).toList(), onChanged: (newValue) {
                                            setState(() {
-                                      _selection = newValue;
+                                       name =      newValue['name'].toString();   
                                     });
 
-                                  print (_selection);
-                                        }, 
-                                        
-                                        // onChanged: (changedDropDownItemSub) {
-                                        // },                   // onChanged: changedDropDownItemSub,
-
+                                         }, 
         ),
       // ),
   
   ),
-//        new Container(
-//               padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10),
-//     child:TextFormField(
-//       // hin:Text(name),
-//     style: TextStyle(
-//         color: Colors.black,fontWeight: FontWeight.w300,
-//     ),
-//   decoration: InputDecoration(
-//     labelText:(name.toString()),
-    
-//   ),
-// )
-
-//       // child: Text(name),
-      
-
-//     )
-     
+ 
      ],);
 
     }
@@ -501,9 +428,8 @@ class DropDownClass extends StatefulWidget{
 
 
 class TextClass extends StatefulWidget{
-    final MyFormCallback onSubmit;
- 
-    TextClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, this.number, this.text})
+  
+    TextClass({Key key,  @required this.name, @required this.list, this.id, this.number, this.text})
      :assert(name!=null||number!=null), super(key: key);
      final String name;
  
@@ -514,7 +440,7 @@ class TextClass extends StatefulWidget{
  //  final Text name2;
   
   @override
-  _TextClass createState() => new _TextClass(this.name,this.list,this.number);
+  _TextClass createState() => new _TextClass(this.name,this.list,this.number.toString());
   
  
   }
@@ -551,13 +477,18 @@ class TextClass extends StatefulWidget{
             
    
   new Padding(
-              padding: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
+              padding: EdgeInsets.only(right: 30.0, left: 30.0, top: 10.0),
               child: TextFormField(
                 controller: _name,
                 keyboardType: TextInputType.number,
                 autofocus: false,
                 textAlign: TextAlign.left,
+                   style: TextStyle(
+                                            color: Color(0xFF880E4F),
+                                            fontSize: 15,
+                                            letterSpacing: 0.5),
                 decoration: InputDecoration(
+                  
                   labelText:(number.toString()),
                   contentPadding:
                   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -571,29 +502,7 @@ class TextClass extends StatefulWidget{
    
     }
 
- 
-    //       return Column(children: <Widget>[
-    //       Container(
-    //       child:ListView.builder(
-    //   itemBuilder: (context, i) => new StickyHeader(
-    //       header: new Container(
-    //         height: 50.0,
-    //         color: Colors.blueGrey[700],
-    //         padding: new EdgeInsets.symmetric(horizontal: 16.0),
-    //         child: new Text( name.toString(),
-    //         textAlign: TextAlign.center),
-    //        ),
-    //       content: new Container(   
-    //         // padding: const EdgeInsets.only(top: 8.0),
-    //         child: new Column(
-    //             children: list
-    //                 .map((val) => new ListTile(
-    //                       title: new Text(number),
-    //                     ))
-    //                 .toList()),
-    //       )),
-    // ))
-    //       ]);
+  
 }
 
 
