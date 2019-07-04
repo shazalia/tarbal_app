@@ -38,6 +38,8 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
        Map <String, dynamic> data;
        List<dynamic> provider;
         List<String> dropdownValue = List();
+        List<dynamic> dropdownValueid = List();
+        
        List<String> textValue = List();
        List<String> cardValue = List();
       //  List <dynamic> dropDownslist  = List();
@@ -95,6 +97,7 @@ void  getCategory() async {
      provider=v,
 
        dropdownValue.clear(),
+       dropdownValueid.clear(),
 
      provider.forEach((v)=>{ // catlist level
  print(v),
@@ -106,13 +109,16 @@ void  getCategory() async {
              if(!k.toString().startsWith("n_")){
                 // print(k), 
               dropdownValue.add(nameId),
+              dropdownValueid.add(v),
+
              } else   if(k.toString().startsWith("n_")){
+                 textWedgit.add(new TextClass(number: v1.toString(),list:textValue)),       
+
                 // textValue=v1,
                textValue.add(nameId),
 
      },
      
-             textWedgit.add(new TextClass(number: v1.toString(),list:textValue)),       
 
 }
     
@@ -628,22 +634,13 @@ class TextClass extends StatefulWidget{
                 controller: _name,
                 keyboardType: TextInputType.number,
                 autofocus: false,
-                textAlign: TextAlign.right,
+                textAlign: TextAlign.left,
                 decoration: InputDecoration(
                   labelText:(number.toString()),
                   contentPadding:
                   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
                 ),
-                validator: (value) {
-                  final RegExp regex = new RegExp(
-                      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-
-                  if (value.isEmpty) {
-                    return 'ال';
-                  }
-                },
+            
               ),
             ),
     
