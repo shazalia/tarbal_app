@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sticky_headers/sticky_headers.dart';
-
     
 class ServiceProvScreen extends StatefulWidget {
   //  final String name;
@@ -24,13 +22,7 @@ class _ServiceProvScreenState extends State<ServiceProvScreen> {
     int postStatus;
       int check = 0,isCount = 0;
      String clientId;
-      List serviceProvider,
-       farmArea,
-       numberFarmAnimals,
-       irrigationMethod,
-       irrigationSource,
-       powerSource,
-       workType;
+ 
       //  final String name;
  
      List<String> userList;
@@ -342,29 +334,21 @@ void  getCategory() async {
                                     minWidth: 20,
                                     onPressed: () {
                                       if(isCount == 1){
-                                        showDialog(
-                                          // this.farmArea, this.numberFarmAnimals, this.irrigationMethod, this.irrigationSource, this.powerSource, this.workType
-                                            context: context, child: new DropDownClass(onSubmit: onSubmit,id: clientId, farmArea: _farmArea, irrigationMethod: _irrigationMethod,
-                                             irrigationSource:_irrigationSource, name: null, numberFarmAnimals: _numberFarmAnimals,
-                                              powerSource: _powerSource, serviceProvider: _serviceProvider, workType: _workType,
-
-                                            // 
-                                            
-                                            ));
+                                    
                                       }else{
                                         _loading();
-                                        placeOrder(clientId,serviceProvider,farmArea
-                                        ,numberFarmAnimals,irrigationMethod,irrigationSource
-                                        ,powerSource,workType).whenComplete(() {
-                                          if (postStatus == 200) {
-                                            Navigator.pop(context);
-                                            _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
+                                        // placeOrder(clientId,serviceProvider,farmArea
+                                        // ,numberFarmAnimals,irrigationMethod,irrigationSource
+                                        // ,powerSource,workType).whenComplete(() {
+                                        //   if (postStatus == 200) {
+                                        //     Navigator.pop(context);
+                                        //     _alert("نجاح","تم انشاء طلبك بنجاح \n ستتواصل معك الادارة");
 
-                                          } else {
-                                            Navigator.pop(context);
-                                            _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
-                                          }
-                                        });
+                                        //   } else {
+                                        //     Navigator.pop(context);
+                                        //     _alert("خطأ","حدث خطأ ما \n يرجى المحاولة مرة اخرى");
+                                        //   }
+                                        // });
                                       }
 
                                     },
@@ -406,19 +390,10 @@ typedef void MyFormCallback(String clientId,List  serviceProvider,List farmArea,
 class DropDownClass extends StatefulWidget{
     final MyFormCallback onSubmit;
  
-    DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, 
-     @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
-     ,@required this.irrigationMethod,
-    @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
+    DropDownClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id,this.number, this.text})
      :assert(name!=null||number!=null), super(key: key);
      final String name;
-      final List serviceProvider;
-        final List farmArea;
-        final List numberFarmAnimals;
-        final List irrigationMethod;
-        final List irrigationSource;
-        final List powerSource;
-       final List  workType;
+ 
   final String number;
   final List list;
   final Text text;
@@ -437,14 +412,7 @@ class DropDownClass extends StatefulWidget{
 
          final String name;
          final String number;
-         List _serviceProvider;
-         List _farmArea;
-         List _numberFarmAnimals;
-         List _irrigationMethod;
-         List _irrigationSource;
-         List _powerSource;
-         List  _workType;
-         List _values;
+  
 
  
    final List list;
@@ -461,22 +429,7 @@ class DropDownClass extends StatefulWidget{
   
   
   }
-  void changedDropDownItemSub(String selectedCat) {
-    setState(() {
-      _currentCatSub = selectedCat;
-      for(int x=1;x<_values.length;x++){
-        if(_values[x] == selectedCat){
-          _serviceProvider = x.toInt() as List;
-          _farmArea = x.toInt() as List;
-          _numberFarmAnimals = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-        }
-      }
-    }
-    );
-  }
+ 
 
     @override
     Widget build(BuildContext context) {
@@ -550,19 +503,10 @@ class DropDownClass extends StatefulWidget{
 class TextClass extends StatefulWidget{
     final MyFormCallback onSubmit;
  
-    TextClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, 
-     @required this.serviceProvider,@required this.farmArea,@required this.numberFarmAnimals
-     ,@required this.irrigationMethod,
-    @required this.irrigationSource,@required this.powerSource,@required this.workType, this.number, this.text})
+    TextClass({Key key,  @required this.name, @required this.list, this.onSubmit, this.id, this.number, this.text})
      :assert(name!=null||number!=null), super(key: key);
      final String name;
-      final List serviceProvider;
-        final List farmArea;
-        final List numberFarmAnimals;
-        final List irrigationMethod;
-        final List irrigationSource;
-        final List powerSource;
-       final List  workType;
+ 
   final String number;
   final List list;
   final Text text;
@@ -581,14 +525,7 @@ class TextClass extends StatefulWidget{
 
          final String name;
          final String number;
-         List _serviceProvider;
-         List _farmArea;
-         List _numberFarmAnimals;
-         List _irrigationMethod;
-         List _irrigationSource;
-         List _powerSource;
-         List  _workType;
-         List _values;
+       
 
  
    final List list;
@@ -604,22 +541,7 @@ class TextClass extends StatefulWidget{
   
   
   }
-  void changedDropDownItemSub(String selectedCat) {
-    setState(() {
-      _currentCatSub = selectedCat;
-      for(int x=1;x<_values.length;x++){
-        if(_values[x] == selectedCat){
-          _serviceProvider = x.toInt() as List;
-          _farmArea = x.toInt() as List;
-          _numberFarmAnimals = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-          _serviceProvider = x.toInt() as List;
-        }
-      }
-    }
-    );
-  }
+ 
 
     @override
     Widget build(BuildContext context) {
