@@ -386,16 +386,19 @@ class DropDownClass extends StatefulWidget{
       
      return Column(children: <Widget>[
        new Container(
+         width: 300.0,
               padding: EdgeInsets.all(20.0),
       //  child: DropdownButtonHideUnderline(
-        
+ 
         child: new DropdownButton(
            elevation: 2,
                   style: TextStyle(color:Colors.amber , fontSize: 18),
         isDense: true,
         iconSize: 20.0,
+        
              hint: Text(name.toString()), 
                          items: list.map((location) {
+                           expand: true;
                           return DropdownMenuItem(
                             
                              child: new Text(location['name'].toString(),
@@ -471,38 +474,29 @@ class TextClass extends StatefulWidget{
 
     @override
     Widget build(BuildContext context) {
-     
-
-     return Column(children: <Widget>[
-            
-   
-  new Padding(
-              padding: EdgeInsets.only(right: 30.0, left: 30.0, top: 10.0),
-              child: TextFormField(
+       return Column(children: <Widget>[
+         Container(
+            padding: EdgeInsets.only(left:20.0,right:20.0,top:10.0),
+             width: 300.0,
+      //  child: Padding(
+               child: TextFormField(
                 controller: _name,
                 keyboardType: TextInputType.number,
                 autofocus: false,
                 textAlign: TextAlign.left,
-                   style: TextStyle(
-                                            color: Color(0xFF880E4F),
-                                            fontSize: 15,
-                                            letterSpacing: 0.5),
+                  style: TextStyle(color: Color(0xFF880E4F),fontSize: 15,
+                  letterSpacing: 0.5),
                 decoration: InputDecoration(
-                  
                   labelText:(number.toString()),
                   contentPadding:
                   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 ),
-            
               ),
-            ),
-    
+            // ),
+         )
      ],
      );
-   
-    }
-
-  
+    } 
 }
 
 
