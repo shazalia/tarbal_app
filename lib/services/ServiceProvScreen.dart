@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sticky_headers/sticky_headers.dart';
     
 class ServiceProvScreen extends StatefulWidget {
   //  final String name;
@@ -106,7 +107,7 @@ void  getCategory() async {
               dropdownValueid.add(v),
 
              } else   if(k.toString().startsWith("n_")){
-                 textWedgit.add(new TextClass(number: v1.toString(),list:textValue)),       
+                 textWedgit.add(new TextClass(name:k,number: v1.toString(),list:textValue)),       
 
                 // textValue=v1,
                textValue.add(nameId),
@@ -471,11 +472,20 @@ class TextClass extends StatefulWidget{
   
   }
  
-
-    @override
-    Widget build(BuildContext context) {
-       return Column(children: <Widget>[
-         Container(
+  @override
+  Widget build(BuildContext context) {
+    return new ListView.builder(itemBuilder: (context, index) {
+      return new StickyHeader(
+        header: new Container(
+          height: 50.0,
+          color: Colors.green[200],
+          padding: new EdgeInsets.symmetric(horizontal: 16.0),
+          alignment: Alignment.centerLeft,
+          child: new Text(name.toString(),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        content: new       Container(
             padding: EdgeInsets.only(left:20.0,right:20.0,top:10.0),
              width: 300.0,
       //  child: Padding(
@@ -494,9 +504,34 @@ class TextClass extends StatefulWidget{
               ),
             // ),
          )
-     ],
-     );
-    } 
+      );
+    });
+  }
+    // @override
+    // Widget build(BuildContext context) {
+    //    return Column(children: <Widget>[
+    //      Container(
+    //         padding: EdgeInsets.only(left:20.0,right:20.0,top:10.0),
+    //          width: 300.0,
+    //   //  child: Padding(
+    //            child: TextFormField(
+    //             controller: _name,
+    //             keyboardType: TextInputType.number,
+    //             autofocus: false,
+    //             textAlign: TextAlign.left,
+    //               style: TextStyle(color: Color(0xFF880E4F),fontSize: 15,
+    //               letterSpacing: 0.5),
+    //             decoration: InputDecoration(
+    //               labelText:(number.toString()),
+    //               contentPadding:
+    //               EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+    //             ),
+    //           ),
+    //         // ),
+    //      )
+    //  ],
+    //  );
+    // } 
 }
 
 
